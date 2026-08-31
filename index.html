@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="An interactive atlas of London using official UK population, work, income, election, building and transport data."
+    />
+    <meta name="theme-color" content="#fafaf7" />
+    <meta property="og:title" content="London Interactive Atlas — Daniel Almazán" />
+    <meta
+      property="og:description"
+      content="Explore London across LSOAs, MSOAs, wards and constituencies, with every layer retaining its official geography."
+    />
+    <title>London Interactive Atlas — Daniel Almazán</title>
+  </head>
+  <body>
+    <svg class="icon-sprite" aria-hidden="true">
+      <symbol id="icon-close" viewBox="0 0 16 16">
+        <path d="M3.5 3.5 12.5 12.5M12.5 3.5 3.5 12.5" />
+      </symbol>
+    </svg>
+    <a class="skip-link" href="#atlas-map">Skip to map</a>
+    <main id="app">
+      <aside
+        id="mobile-sheet"
+        class="atlas-panel"
+        data-mobile-view="details"
+        aria-label="Atlas controls"
+      >
+        <div class="mobile-sheet-header">
+          <div>
+            <span class="mobile-sheet-kicker">Map panel</span>
+            <strong id="mobile-sheet-title">Map details</strong>
+          </div>
+          <button
+            id="sheet-close"
+            class="sheet-close"
+            type="button"
+            aria-label="Collapse map panel"
+          >
+            <svg class="close-icon" viewBox="0 0 16 16" aria-hidden="true"><use href="#icon-close" /></svg>
+          </button>
+        </div>
+        <div class="panel-scroll">
+          <header class="masthead">
+            <p class="eyebrow">Civic atlas · London</p>
+            <h1>Read London, <em>area by area.</em></h1>
+          </header>
+
+          <nav class="group-tabs" aria-label="Layer groups">
+            <button class="group-tab is-active" data-group="population" type="button">Population</button>
+            <button class="group-tab" data-group="education-work" type="button">Education &amp; Work</button>
+            <button class="group-tab" data-group="buildings" type="button">Buildings</button>
+            <button class="group-tab" data-group="elections" type="button">Elections</button>
+            <button class="group-tab" data-group="income" type="button">Income</button>
+            <button class="group-tab" data-group="transport" type="button">Transport</button>
+          </nav>
+
+          <section id="layer-controls" class="control-stack" aria-live="polite"></section>
+
+          <section class="legend-panel" aria-label="Map legend">
+            <div class="section-heading">
+              <p class="legend-heading">
+                <span>Legend</span>
+                <span aria-hidden="true">·</span>
+                <span id="legend-title">Population density</span>
+              </p>
+              <span id="legend-date" class="date-chip"></span>
+            </div>
+            <div id="legend" class="legend"></div>
+          </section>
+
+          <section id="feature-panel" class="feature-panel" aria-live="polite">
+            <p class="feature-empty">
+              Select an LSOA or map feature to see its details.
+            </p>
+          </section>
+
+          <section id="mobile-info-panel" class="mobile-info-panel" aria-label="Map information">
+            <div class="info-ready">
+              <span class="status-dot" aria-hidden="true"></span>
+              <div><strong id="info-status-text">Loading atlas…</strong><span>Current data and map status</span></div>
+            </div>
+            <div class="info-block">
+              <span class="feature-kicker">Project</span>
+              <strong>London Interactive Atlas</strong>
+              <p>Designed and built by Daniel Almazán.</p>
+              <a href="https://danielalmazan.com">danielalmazan.com ↗</a>
+            </div>
+            <div class="info-block">
+              <span class="feature-kicker">Map attribution</span>
+              <p>
+                Basemap by <a href="https://openfreemap.org/">OpenFreeMap</a>.
+                Map data © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+              </p>
+            </div>
+            <button id="info-methodology-button" class="report-link-button" type="button">Sources &amp; methodology</button>
+          </section>
+        </div>
+
+        <footer class="panel-footer">
+          <button id="about-button" class="text-button" type="button">Sources &amp; methodology</button>
+          <a href="https://danielalmazan.com" class="text-link">danielalmazan.com</a>
+        </footer>
+      </aside>
+
+      <section class="map-stage" aria-label="Interactive map region">
+        <div class="map-topbar">
+          <label class="search-control">
+            <span class="visually-hidden">Search addresses, districts and neighbourhoods</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+            </svg>
+            <input
+              id="place-search"
+              type="search"
+              autocomplete="off"
+              placeholder="Find an address or area"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-controls="search-results"
+              aria-expanded="false"
+            />
+            <kbd>/</kbd>
+          </label>
+          <div id="search-results" class="search-results" role="listbox" hidden></div>
+          <div class="map-actions">
+            <button
+              id="basemap-button"
+              class="icon-button"
+              type="button"
+              aria-pressed="false"
+              aria-label="Switch to dark background map"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20.2 15.2A8 8 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z" />
+              </svg>
+              <span class="button-label">Dark map</span>
+            </button>
+            <button id="pitch-button" class="icon-button" type="button" aria-pressed="false" hidden>
+              <span class="button-icon" aria-hidden="true">3D</span>
+              <span class="button-label">Buildings</span>
+            </button>
+            <button id="reset-button" class="icon-button" type="button">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4v6h6M5.1 15A8 8 0 1 0 6 7.1L4 10" />
+              </svg>
+              <span class="button-label">Reset</span>
+            </button>
+            <button id="share-button" class="icon-button" type="button" aria-label="Share this map view">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <path d="m8.6 10.5 6.8-4M8.6 13.5l6.8 4" />
+              </svg>
+              <span class="button-label">Share</span>
+            </button>
+            <button
+              id="mobile-layers-button"
+              class="icon-button mobile-panel-button"
+              type="button"
+              aria-controls="mobile-sheet"
+              aria-expanded="false"
+              aria-pressed="false"
+              aria-label="Choose map layers"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m12 3-9 5 9 5 9-5-9-5Z" />
+                <path d="m3 12 9 5 9-5M3 16l9 5 9-5" />
+              </svg>
+              <span class="button-label">Layers</span>
+            </button>
+            <button
+              id="mobile-legend-button"
+              class="icon-button mobile-panel-button"
+              type="button"
+              aria-controls="mobile-sheet"
+              aria-expanded="false"
+              aria-pressed="false"
+              aria-label="Show map legend"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="5" height="5" rx="1" />
+                <rect x="3" y="15" width="5" height="5" rx="1" />
+                <path d="M12 6.5h9M12 17.5h9" />
+              </svg>
+              <span class="button-label">Legend</span>
+            </button>
+            <button
+              id="mobile-info-button"
+              class="icon-button mobile-panel-button"
+              type="button"
+              aria-controls="mobile-sheet"
+              aria-expanded="false"
+              aria-pressed="false"
+              aria-label="Show map information"
+            >
+              <span class="button-icon info-icon" aria-hidden="true">i</span>
+              <span class="button-label">Info</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="atlas-map" role="application" aria-label="Map of London" tabindex="0"></div>
+        <div id="map-status" class="map-status" role="status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>Loading atlas…</span>
+        </div>
+        <button
+          id="sheet-toggle"
+          class="sheet-toggle"
+          type="button"
+          aria-controls="mobile-sheet"
+          aria-expanded="false"
+        >
+          <span class="sheet-handle" aria-hidden="true"></span>
+          <span id="sheet-toggle-label">Population details</span>
+        </button>
+      </section>
+    </main>
+
+    <dialog id="about-dialog" class="about-dialog">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">About this project</p>
+          <h2>Sources &amp; methodology</h2>
+        </div>
+        <button id="close-about" class="close-button" type="button" aria-label="Close"><svg class="close-icon" viewBox="0 0 16 16" aria-hidden="true"><use href="#icon-close" /></svg></button>
+      </div>
+      <div id="methodology-content" class="methodology-content"></div>
+    </dialog>
+
+    <dialog id="share-dialog" class="action-dialog">
+      <div class="action-dialog-heading">
+        <div><p class="eyebrow">Share the atlas</p><h2 id="share-dialog-title">Share this view</h2></div>
+        <button id="close-share" class="close-button" type="button" aria-label="Close"><svg class="close-icon" viewBox="0 0 16 16" aria-hidden="true"><use href="#icon-close" /></svg></button>
+      </div>
+      <div class="share-actions">
+        <button id="share-view-action" class="share-action" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12h8M13 7l5 5-5 5" /><path d="M18 4h2v16h-2M6 6H4v12h2" /></svg>
+          <span><strong>Share map view</strong><small>Includes the active layer and map position</small></span>
+        </button>
+        <button id="share-report-action" class="share-action" type="button" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6z" /><path d="M15 3v5h5M9 13h7M9 17h5" /></svg>
+          <span><strong>Open full area report</strong><small>Review, copy its link, or save it as PDF</small></span>
+        </button>
+      </div>
+    </dialog>
+
+    <dialog id="report-dialog" class="report-dialog">
+      <div class="report-dialog-shell">
+        <header class="report-dialog-toolbar">
+          <div><p class="eyebrow">London Atlas</p><strong id="report-dialog-title">Small-area report</strong></div>
+          <div class="report-dialog-actions">
+            <button id="copy-report-link" class="text-button" type="button">Copy report link</button>
+            <button id="print-report" class="report-print-button" type="button">Print / Save as PDF</button>
+            <button id="close-report" class="close-button" type="button" aria-label="Close report"><svg class="close-icon" viewBox="0 0 16 16" aria-hidden="true"><use href="#icon-close" /></svg></button>
+          </div>
+        </header>
+        <div id="report-content" class="report-content" aria-live="polite"></div>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <noscript>This atlas requires JavaScript to render the interactive map.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

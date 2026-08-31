@@ -1,0 +1,22 @@
+{
+  "validatedAt": "2026-08-31 07:01:57Z",
+  "status": "pass",
+  "layerCount": 62,
+  "reportCount": 4994,
+  "checks": {
+    "londonProjectIndependent": true,
+    "lsoaStandardGeography": true,
+    "excludedPopulationLayersAbsent": true,
+    "excluded2024LondonElectionsAbsent": true,
+    "leftRightSplitAbsent": true,
+    "electionLeadVotesAndPercentPresent": true,
+    "missingValuesPreserved": true
+  },
+  "archiveBytes": {
+    "lsoa21.pmtiles": 16624672,
+    "msoa21.pmtiles": 1779444,
+    "elections-general-2024.pmtiles": 493626,
+    "elections-local-2022.pmtiles": 1923392,
+    "elections-london-2021.pmtiles": 3173591
+  }
+}
