@@ -9,7 +9,7 @@ An independent, reproducible MapLibre atlas of Greater London built from free of
 - Income deprivation, IDACI and IDAOPI: LSOA21.
 - Elections: Westminster constituency 2024, ward 2022, and ward 2021.
 - Domestic construction age: London Building Stock Model 2 property locations. Domestic properties only; age may be modelled.
-- Transport: dated static TfL rail, bus, stop and Santander Cycles snapshot.
+- Transport: actual OpenStreetMap rail route geometry with dated TfL service/station metadata, plus official TfL bus geometry and Santander Cycles docks.
 - Building height: withheld pending a licensable open London-wide derivation; see `docs/building-height-source-decision.md`.
 
 ## Commands
@@ -26,3 +26,5 @@ The production base path is `/london/`. Generated public assets live in `public/
 ## Data rules
 
 Missing, suppressed and uncovered observations remain `No data`. Foreign citizenship, foreign-born change, left/right electoral blocs, and the 2024 London mayor/Assembly results are deliberately absent. Election lead is leader votes minus runner-up votes; lead percentage divides that margin by valid votes.
+
+The 2022 borough-election source excludes the City of London's separate Common Council elections, so the City's wards remain explicitly `No data`. Party-specific maps use the parties' recognised primary colours.

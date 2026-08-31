@@ -47,7 +47,10 @@ uk_born <- first_matching_name(ts004, "Europe: United Kingdom")
 foreign_born <- ts004 |>
   transmute(
     section_id = `geography code`,
-    foreign_born_pct = safe_percent(.data[[foreign_total]] - .data[[uk_born]], .data[[foreign_total]])
+    census_usual_residents = .data[[foreign_total]],
+    uk_born_residents = .data[[uk_born]],
+    foreign_born_residents = .data[[foreign_total]] - .data[[uk_born]],
+    foreign_born_pct = safe_percent(foreign_born_residents, census_usual_residents)
   ) |>
   filter(section_id %in% population$section_id)
 

@@ -23,7 +23,8 @@ export type AddressRecord = [id: string, name: string, district: string, longitu
 export interface AddressIndex { referenceDate: string; records: AddressRecord[]; }
 export interface CameraState { lng: number; lat: number; zoom: number; bearing: number; pitch: number; }
 export interface AtlasState { group: LayerGroup; layer: string; dataLayerVisible: boolean; election: ElectionKey; party: string; transport: string[]; route: string; country: string; basemap: BasemapTheme; camera: CameraState; is3d: boolean; selectedSection: string | null; reportOpen: boolean; }
-export interface ReportMetricValue { value: number | null; percentile: number | null; label: string; format: ValueFormat; unit: string; geography: string; referenceDate: string; }
-export interface ReportElection { leader: string | null; leadVotes: number | null; leadPercent: number | null; leadLabel: string | null; turnoutPct: number | null; validVotes: number | null; geography: string; shares: Record<string, number | null>; }
+export interface ReportDistribution { breaks: number[]; counts: number[]; observationCount: number; min: number | null; max: number | null; }
+export interface ReportMetricValue { value: number | null; percentile: number | null; label: string; format: ValueFormat; unit: string; geography: string; referenceDate: string; distribution?: ReportDistribution; note?: string; }
+export interface ReportElection { leader: string | null; leadVotes: number | null; leadPercent: number | null; leadLabel: string | null; turnoutPct: number | null; validVotes: number | null; geography: string; areaId: string | null; areaName: string | null; shares: Record<string, number | null>; }
 export interface SectionReport { id: string; name: string; district: string; geographies: Record<string, { id: string | null; name: string | null; vintage: string }>; metrics: Record<string, ReportMetricValue>; elections: Record<ElectionKey, ReportElection>; building: null; }
 export interface SectionReportIndex { generatedAt: string; version: string; canonicalVintage: "2021"; methodologyUrl: string; references: SourceReference[]; sections: Record<string, SectionReport>; }

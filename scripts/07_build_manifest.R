@@ -4,11 +4,13 @@ lsoa <- read_csv(file.path(processed_dir, "lsoa-statistics.csv"), show_col_types
 msoa <- read_csv(file.path(processed_dir, "msoa-income.csv"), show_col_types = FALSE)
 
 palette_blue <- c("#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70")
+palette_viridis <- c("#440154", "#414487", "#2a788e", "#22a884", "#7ad151", "#fde725")
 palette_teal <- c("#edf5f2", "#cce3db", "#98cabb", "#62aa95", "#33806d", "#155a4c")
 palette_orange <- c("#fff2df", "#fbd8ad", "#f2b779", "#df8e48", "#bc6230", "#843d29")
 palette_purple <- c("#f4eff7", "#ddd0e7", "#bea9d1", "#987fb6", "#70558f", "#4c3569")
 palette_diverging <- c("#7d2948", "#c16b78", "#ead0cf", "#f3f1e7", "#bad8cf", "#5b9b8c", "#1f625c")
-party_colours <- c(labour = "#d62728", conservative = "#2774ae", liberal_democrat = "#f3c300", green = "#2e8b57", reform = "#34a5c8", independent = "#666666", other = "#9b9b9b")
+party_colours <- c(labour = "#E4003B", conservative = "#0087DC", liberal_democrat = "#FAA61A", green = "#6AB023", reform = "#12B6CF", independent = "#666666", other = "#9b9b9b")
+party_palette <- function(colour) grDevices::colorRampPalette(c("#f7f7f4", colour))(6)
 party_label <- function(key) recode(key,
   labour = "Labour", conservative = "Conservative", liberal_democrat = "Liberal Democrats",
   green = "Green", reform = "Reform UK", independent = "Independent", other = "Other"
@@ -42,7 +44,7 @@ layer <- function(id, group, label, description, property, data, format, unit, g
 
 layers <- list(
   layer("population-total", "population", "Resident population", "ONS mid-2024 usual-resident estimate.", "population_total", lsoa, "integer", "residents", "LSOA21", "2024-06-30", "lsoa21", palette_blue, short_label = "Residents", tooltip_fields = list(tooltip("population_total", "Residents", "integer", "population_total_percentile"))),
-  layer("population-density", "population", "Population density", "Mid-2024 residents divided by the ONS LSOA21 polygon area.", "population_density_km2", lsoa, "integer", "residents/km²", "LSOA21", "2024-06-30", "lsoa21", palette_blue, short_label = "Density", data_status = "derived", tooltip_fields = list(tooltip("population_density_km2", "Residents per km²", "integer", "population_density_km2_percentile"))),
+  layer("population-density", "population", "Population density", "Mid-2024 residents divided by the ONS LSOA21 polygon area.", "population_density_km2", lsoa, "integer", "residents/km²", "LSOA21", "2024-06-30", "lsoa21", palette_viridis, short_label = "Density", data_status = "derived", tooltip_fields = list(tooltip("population_density_km2", "Residents per km²", "integer", "population_density_km2_percentile"))),
   layer("under-18", "population", "Residents under 18", "Share of mid-2024 residents aged 0–17.", "under18_pct", lsoa, "percent", "%", "LSOA21", "2024-06-30", "lsoa21", palette_teal, short_label = "Under 18", tooltip_fields = list(tooltip("under18_pct", "Under 18", "percent", "under18_pct_percentile"))),
   layer("age-65-plus", "population", "Residents aged 65+", "Share of mid-2024 residents aged 65 or over.", "age65plus_pct", lsoa, "percent", "%", "LSOA21", "2024-06-30", "lsoa21", palette_orange, short_label = "Age 65+", tooltip_fields = list(tooltip("age65plus_pct", "Age 65+", "percent", "age65plus_pct_percentile"))),
   layer("population-change-5y", "population", "Five-year population change", "Change between ONS mid-2019 and mid-2024 estimates, both published on LSOA21 geography.", "population_change_5y_pct", lsoa, "percent", "%", "LSOA21", "2019–2024", "lsoa21", palette_diverging, short_label = "5-year change", data_status = "derived", tooltip_fields = list(tooltip("population_change_5y_pct", "Change", "percent", "population_change_5y_pct_percentile"))),
@@ -79,20 +81,20 @@ for (key in names(election_specs)) {
   layers[[length(layers) + 1]] <- layer(paste0(key, "-turnout"), "elections", paste0(spec$label, " turnout"), if (key == "local") "The GLA ward workbook does not publish an electorate denominator; this layer therefore preserves No data rather than estimating turnout." else "Valid and rejected ballots cast as a share of the registered electorate.", paste0("turnout_pct_", key), spec$data, "percent", "%", spec$geography, spec$date, spec$source, palette_teal, short_label = "Turnout", data_status = ifelse(key == "local", "unavailable", "derived"), tooltip_fields = list(tooltip(paste0("turnout_pct_", key), "Turnout", "percent")), control = list(election = key, party = "turnout"))
   for (party in names(party_colours)[1:5]) {
     property <- paste0("share_", party, "_", key)
-    layers[[length(layers) + 1]] <- layer(paste0(key, "-", party), "elections", paste0(party_label(party), " vote share"), "Party votes as a share of valid votes.", property, spec$data, "percent", "%", spec$geography, spec$date, spec$source, palette_blue, short_label = party_label(party), data_status = "derived", tooltip_fields = list(tooltip(property, paste0(party_label(party), " share"), "percent")), control = list(election = key, party = party))
+    layers[[length(layers) + 1]] <- layer(paste0(key, "-", party), "elections", paste0(party_label(party), " vote share"), "Party votes as a share of valid votes.", property, spec$data, "percent", "%", spec$geography, spec$date, spec$source, party_palette(unname(party_colours[[party]])), short_label = party_label(party), data_status = "derived", tooltip_fields = list(tooltip(property, paste0(party_label(party), " share"), "percent")), control = list(election = key, party = party))
   }
 }
 
 if (file.exists(file.path(public_data_dir, "domestic-properties.pmtiles"))) {
-  age_colours <- c("#5b2a2a", "#7f3f32", "#a75e40", "#c77c53", "#dd9b6b", "#e9b885", "#f1cea1", "#d7cfc0", "#aebdc2", "#7898a5", "#d3d3cc")
+  age_colours <- c("#5b2a2a", "#7f3f32", "#a75e40", "#c77c53", "#dd9b6b", "#e9b885", "#f1cea1", "#d7cfc0")
   layers[[length(layers) + 1]] <- list(
-    id = "domestic-property-age", group = "buildings", kind = "point",
+    id = "domestic-property-age", group = "buildings", kind = "fill",
     label = "Domestic property construction age", shortLabel = "Construction age",
     description = "Domestic properties only. Construction age may be modelled where no direct source record is available.",
-    methodology = "One point per LBSM2 building coordinate, coloured by the modal construction-age band of domestic property records at that location. The tooltip reports the direct/modelled status and property count.",
-    unit = "age band", referenceDate = "LBSM2 snapshot October 2024", geography = "domestic property location",
+    methodology = "OS OpenMap Local building outlines matched spatially to LBSM2 domestic-property locations, coloured by the modal construction-age band of domestic property records in each matched outline. The tooltip reports the direct/modelled status and property count.",
+    unit = "age band", referenceDate = "LBSM2 snapshot October 2024; OS OpenMap Local August 2026", geography = "generalised building outline",
     sourceIds = list("domestic-properties"), property = "age_band_code", palette = age_colours,
-    breaks = 1:11, format = "integer", minzoom = 11, maxzoom = 17, opacity = 0.9,
+    breaks = 1:8, format = "integer", minzoom = 11, maxzoom = 17, opacity = 0.9,
     tooltip = list(
       tooltip("construction_age_band", "Construction age band", "text"),
       tooltip("domestic_properties", "Domestic properties", "integer"),
@@ -111,13 +113,13 @@ if (file.exists(file.path(public_data_dir, "transport.pmtiles"))) {
     if (mode != "santander") {
       layers[[length(layers) + 1]] <- list(
         id = paste0("transport-", mode, "-lines"), group = "transport", kind = "transport-line",
-        label = paste0(transport_labels[[mode]], " lines"), description = "Dated static TfL network snapshot; no live runtime dependency.",
-        unit = "", referenceDate = as.character(Sys.Date()), geography = "TfL network geometry", sourceIds = list("transport"),
+        label = paste0(transport_labels[[mode]], " lines"), description = ifelse(mode == "bus", "Dated static TfL route geometry; no live runtime dependency.", "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops."),
+        unit = "", referenceDate = as.character(Sys.Date()), geography = ifelse(mode == "bus", "TfL network geometry", "OSM route relation / TfL service"), sourceIds = list("transport"),
         property = "route_id", palette = unname(transport_colours[[mode]]), breaks = numeric(), format = "text",
         minzoom = 7, maxzoom = 17, opacity = 0.9, lineColor = unname(transport_colours[[mode]]), lineWidth = ifelse(mode == "bus", 0.8, 1.7),
         tooltip = list(tooltip("name", "Line", "text"), tooltip("snapshot_date", "Snapshot", "text")),
         control = c(list(transportMode = mode, routeProperty = "route_id"), if (mode == "bus") list(routes = routes) else list()),
-        dataStatus = "direct snapshot"
+        dataStatus = ifelse(mode == "bus", "direct snapshot", "mixed OSM geometry / TfL metadata")
       )
     }
     layers[[length(layers) + 1]] <- list(
@@ -126,7 +128,7 @@ if (file.exists(file.path(public_data_dir, "transport.pmtiles"))) {
       description = "Dated static TfL stop/dock snapshot; availability is not shown.", unit = "",
       referenceDate = as.character(Sys.Date()), geography = "TfL stop or dock location", sourceIds = list("transport"),
       property = "name", palette = unname(transport_colours[[mode]]), breaks = numeric(), format = "text",
-      minzoom = ifelse(mode == "bus", 13, 11), maxzoom = 18, opacity = 0.95, lineColor = unname(transport_colours[[mode]]),
+      minzoom = ifelse(mode == "bus", 13, 9), maxzoom = 18, opacity = 0.98, lineColor = unname(transport_colours[[mode]]),
       tooltip = list(tooltip("name", ifelse(mode == "santander", "Dock", "Stop"), "text"), tooltip("snapshot_date", "Snapshot", "text")),
       control = c(list(transportMode = mode, routeProperty = "route_id"), if (mode == "bus") list(routes = routes) else list()),
       dataStatus = "direct snapshot"
@@ -142,10 +144,10 @@ sources_manifest <- list(
   list(id = "elections-london-2021", url = "data/elections-london-2021.pmtiles", sourceLayer = "wards2021", attribution = "London Elects; ONS", minzoom = 8, maxzoom = 14)
 )
 if (file.exists(file.path(public_data_dir, "domestic-properties.pmtiles"))) {
-  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "domestic-properties", url = "data/domestic-properties.pmtiles", sourceLayer = "domestic_properties", attribution = "Greater London Authority LBSM2", minzoom = 11, maxzoom = 16)
+  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "domestic-properties", url = "data/domestic-properties.pmtiles", sourceLayer = "domestic_properties", attribution = "Greater London Authority LBSM2; OS OpenMap Local © Crown copyright", minzoom = 11, maxzoom = 15)
 }
 if (file.exists(file.path(public_data_dir, "transport.pmtiles"))) {
-  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "transport", url = "data/transport.pmtiles", sourceLayer = "transport", attribution = "Powered by TfL Open Data", minzoom = 7, maxzoom = 16)
+  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "transport", url = "data/transport.pmtiles", sourceLayer = "transport", attribution = "TfL Open Data; © OpenStreetMap contributors", minzoom = 7, maxzoom = 16)
 }
 
 references <- list(
@@ -158,7 +160,9 @@ references <- list(
   list(title = "Mayor and London Assembly election results 2021", organisation = "London Elects", url = sources$london_elects_2021_xlsx, licence = "Open Government Licence", retrieved = as.character(Sys.Date()))
 )
 references[[length(references) + 1]] <- list(title = "London Building Stock Model 2", organisation = "Greater London Authority", url = sources$gla_lbsm2_page, licence = "Open Government Licence", retrieved = as.character(Sys.Date()))
+references[[length(references) + 1]] <- list(title = "OS OpenMap Local", organisation = "Ordnance Survey", url = sources$os_openmap_local_page, licence = "Open Government Licence v3.0", retrieved = as.character(Sys.Date()))
 references[[length(references) + 1]] <- list(title = "TfL Open Data", organisation = "Transport for London", url = sources$tfl_open_data_page, licence = "TfL open-data terms", retrieved = as.character(Sys.Date()))
+references[[length(references) + 1]] <- list(title = "OpenStreetMap rail route relations", organisation = "OpenStreetMap contributors", url = "https://www.openstreetmap.org/copyright", licence = "Open Data Commons Open Database License", retrieved = as.character(Sys.Date()))
 
 manifest <- list(
   generatedAt = paste0(format(Sys.time(), tz = "UTC", usetz = FALSE), "Z"), version = "1.0.0",
@@ -169,6 +173,7 @@ manifest <- list(
     "Foreign citizenship and foreign-born change are deliberately excluded.",
     "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.",
     "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.",
+    "City of London wards are No data in the 2022 borough-election layers because the City holds separate Common Council elections outside the GLA borough-results workbook.",
     "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."
   )
 )

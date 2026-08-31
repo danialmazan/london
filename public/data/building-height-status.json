@@ -1,8 +1,8 @@
 {
   "status": "withheld",
   "layer": "building-height",
-  "reason": "The EMU Analytics London sample is no longer published at its former page and no redistribution licence has been verified. A London-wide EA LiDAR DSM-minus-DTM derivation also requires an open building-footprint source and a separate high-volume raster build.",
-  "decision": "Do not publish EMU data or an inferred replacement. Keep genuine gaps as No data until the open derivation is completed and validated.",
+  "reason": "No verified redistributable London-wide height dataset is currently included.",
+  "decision": "Keep genuine gaps as No data until an open derivation is completed and validated.",
   "checkedAt": "2026-08-31",
   "candidateSources": [
     "https://www.emu-analytics.com/post/data-packs-from-emu-analytics",

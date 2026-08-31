@@ -50,16 +50,36 @@ metric_metadata <- list(
   idaopi_rate = c("Income deprivation affecting older people", "percent", "%", "LSOA21", "2025")
 )
 
+distribution_for <- function(values, bins = 18L) {
+  values <- values[is.finite(values)]
+  if (!length(values)) return(NULL)
+  limits <- range(values)
+  if (limits[[1]] == limits[[2]]) limits[[2]] <- limits[[1]] + 1
+  breaks <- seq(limits[[1]], limits[[2]], length.out = bins + 1L)
+  histogram <- hist(values, breaks = breaks, plot = FALSE, include.lowest = TRUE, right = TRUE)
+  list(
+    breaks = unname(histogram$breaks), counts = as.integer(histogram$counts),
+    observationCount = length(values), min = unname(min(values)), max = unname(max(values))
+  )
+}
+
+metric_distributions <- setNames(lapply(names(metric_metadata), function(field) {
+  source_data <- if (field %in% c("income_bhc_gbp", "income_ahc_gbp")) st_drop_geometry(msoa) else st_drop_geometry(lsoa)
+  distribution_for(source_data[[field]])
+}), names(metric_metadata))
+
 metric_item <- function(row, field, metadata) {
   percentile_field <- paste0(field, "_percentile")
   list(
     value = if (is.na(row[[field]])) NULL else unname(row[[field]]),
     percentile = if (!percentile_field %in% names(row) || is.na(row[[percentile_field]])) NULL else unname(row[[percentile_field]]),
-    label = metadata[[1]], format = metadata[[2]], unit = metadata[[3]], geography = metadata[[4]], referenceDate = metadata[[5]]
+    label = metadata[[1]], format = metadata[[2]], unit = metadata[[3]], geography = metadata[[4]], referenceDate = metadata[[5]],
+    distribution = metric_distributions[[field]],
+    note = if (field == "foreign_born_pct" && !is.na(row$foreign_born_residents) && !is.na(row$census_usual_residents)) paste0(format(row$foreign_born_residents, big.mark = ",", scientific = FALSE), " of ", format(row$census_usual_residents, big.mark = ",", scientific = FALSE), " usual residents") else NULL
   )
 }
 
-election_item <- function(row, key, geography) {
+election_item <- function(row, key, geography, area_id, area_name) {
   get_value <- function(prefix) {
     field <- paste0(prefix, "_", key)
     if (!field %in% names(row) || is.na(row[[field]])) NULL else unname(row[[field]])
@@ -67,7 +87,7 @@ election_item <- function(row, key, geography) {
   list(
     leader = get_value("leader"), leadVotes = get_value("lead_votes"), leadPercent = get_value("lead_percent"),
     leadLabel = get_value("lead_label"), turnoutPct = get_value("turnout_pct"), validVotes = get_value("valid_votes"),
-    geography = geography,
+    geography = geography, areaId = if (is.na(area_id)) NULL else unname(area_id), areaName = if (is.na(area_name)) NULL else unname(area_name),
     shares = setNames(lapply(c("labour", "conservative", "liberal_democrat", "green", "reform"), function(party) get_value(paste0("share_", party))), c("labour", "conservative", "liberal_democrat", "green", "reform"))
   )
 }
@@ -86,10 +106,10 @@ sections <- setNames(lapply(seq_len(nrow(combined)), function(index) {
     ),
     metrics = metrics,
     elections = list(
-      general = election_item(row, "general", "Westminster constituency 2024"),
-      local = election_item(row, "local", "electoral ward 2022"),
-      mayor = election_item(row, "mayor", "electoral ward 2021"),
-      assembly = election_item(row, "assembly", "electoral ward 2021")
+      general = election_item(row, "general", "Westminster constituency 2024", row$constituency_id, row$constituency_name),
+      local = election_item(row, "local", "electoral ward 2022", row$ward_id.x, row$ward_name.x),
+      mayor = election_item(row, "mayor", "electoral ward 2021", row$ward_id.y, row$ward_name.y),
+      assembly = election_item(row, "assembly", "electoral ward 2021", row$ward_id.y, row$ward_name.y)
     ),
     building = NULL
   )

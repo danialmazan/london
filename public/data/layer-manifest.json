@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31 06:52:10Z",
+  "generatedAt": "2026-08-31 14:19:06Z",
   "version": "1.0.0",
   "defaultLayer": "population-density",
   "sources": [
@@ -47,15 +47,15 @@
       "id": "domestic-properties",
       "url": "data/domestic-properties.pmtiles",
       "sourceLayer": "domestic_properties",
-      "attribution": "Greater London Authority LBSM2",
+      "attribution": "Greater London Authority LBSM2; OS OpenMap Local © Crown copyright",
       "minzoom": 11,
-      "maxzoom": 16
+      "maxzoom": 15
     },
     {
       "id": "transport",
       "url": "data/transport.pmtiles",
       "sourceLayer": "transport",
-      "attribution": "Powered by TfL Open Data",
+      "attribution": "TfL Open Data; © OpenStreetMap contributors",
       "minzoom": 7,
       "maxzoom": 16
     }
@@ -105,7 +105,7 @@
         "lsoa21"
       ],
       "property": "population_density_km2",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#440154", "#414487", "#2a788e", "#22a884", "#7ad151", "#fde725"],
       "breaks": [134.2, 4617.7, 6834.3, 9254.1, 12225.5, 16423.5, 156877.9],
       "format": "integer",
       "minzoom": 8,
@@ -575,7 +575,7 @@
         "elections-general-2024"
       ],
       "property": "leader_key_general",
-      "palette": ["labour", "#d62728", "conservative", "#2774ae", "liberal_democrat", "#f3c300", "green", "#2e8b57", "reform", "#34a5c8", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
       "breaks": [],
       "format": "text",
       "minzoom": 7,
@@ -606,27 +606,27 @@
           {
             "property": "share_labour_general",
             "label": "Labour",
-            "color": "#d62728"
+            "color": "#E4003B"
           },
           {
             "property": "share_conservative_general",
             "label": "Conservative",
-            "color": "#2774ae"
+            "color": "#0087DC"
           },
           {
             "property": "share_liberal_democrat_general",
             "label": "Liberal Democrats",
-            "color": "#f3c300"
+            "color": "#FAA61A"
           },
           {
             "property": "share_green_general",
             "label": "Green",
-            "color": "#2e8b57"
+            "color": "#6AB023"
           },
           {
             "property": "share_reform_general",
             "label": "Reform UK",
-            "color": "#34a5c8"
+            "color": "#12B6CF"
           }
         ]
       }
@@ -721,7 +721,7 @@
         "elections-general-2024"
       ],
       "property": "share_labour_general",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
       "breaks": [9.7, 31.4, 41, 44.8, 50.6, 56.2, 60.3],
       "format": "percent",
       "minzoom": 7,
@@ -754,7 +754,7 @@
         "elections-general-2024"
       ],
       "property": "share_conservative_general",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
       "breaks": [4, 8.2, 12.5, 17.8, 23.4, 34.1, 53.3],
       "format": "percent",
       "minzoom": 7,
@@ -787,7 +787,7 @@
         "elections-general-2024"
       ],
       "property": "share_liberal_democrat_general",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F7E6C8", "#F8D69C", "#F8C671", "#F9B645", "#FAA61A"],
       "breaks": [2.3, 4, 5.3, 7.3, 9, 12.1, 56.3],
       "format": "percent",
       "minzoom": 7,
@@ -820,7 +820,7 @@
         "elections-general-2024"
       ],
       "property": "share_green_general",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
       "breaks": [2.7, 5.5, 6.7, 9.3, 11.3, 15.7, 23.9],
       "format": "percent",
       "minzoom": 7,
@@ -853,7 +853,7 @@
         "elections-general-2024"
       ],
       "property": "share_reform_general",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C9EAEC", "#9BDDE5", "#6DD0DD", "#3FC3D6", "#12B6CF"],
       "breaks": [3.1, 4.6, 5.7, 6.9, 8.5, 13.2, 28.4],
       "format": "percent",
       "minzoom": 7,
@@ -886,7 +886,7 @@
         "elections-local-2022"
       ],
       "property": "leader_key_local",
-      "palette": ["labour", "#d62728", "conservative", "#2774ae", "liberal_democrat", "#f3c300", "green", "#2e8b57", "reform", "#34a5c8", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
       "breaks": [],
       "format": "text",
       "minzoom": 8,
@@ -917,27 +917,27 @@
           {
             "property": "share_labour_local",
             "label": "Labour",
-            "color": "#d62728"
+            "color": "#E4003B"
           },
           {
             "property": "share_conservative_local",
             "label": "Conservative",
-            "color": "#2774ae"
+            "color": "#0087DC"
           },
           {
             "property": "share_liberal_democrat_local",
             "label": "Liberal Democrats",
-            "color": "#f3c300"
+            "color": "#FAA61A"
           },
           {
             "property": "share_green_local",
             "label": "Green",
-            "color": "#2e8b57"
+            "color": "#6AB023"
           },
           {
             "property": "share_reform_local",
             "label": "Reform UK",
-            "color": "#34a5c8"
+            "color": "#12B6CF"
           }
         ]
       }
@@ -1032,7 +1032,7 @@
         "elections-local-2022"
       ],
       "property": "share_labour_local",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
       "breaks": [6.2, 22.6, 36.7, 48.7, 58.9, 67, 84.2],
       "format": "percent",
       "minzoom": 8,
@@ -1065,7 +1065,7 @@
         "elections-local-2022"
       ],
       "property": "share_conservative_local",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
       "breaks": [0, 10.3, 17, 24.6, 35.2, 48.8, 69.1],
       "format": "percent",
       "minzoom": 8,
@@ -1098,7 +1098,7 @@
         "elections-local-2022"
       ],
       "property": "share_liberal_democrat_local",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F7E6C8", "#F8D69C", "#F8C671", "#F9B645", "#FAA61A"],
       "breaks": [0, 1.8, 6, 9.1, 12.3, 26.3, 70.3],
       "format": "percent",
       "minzoom": 8,
@@ -1131,7 +1131,7 @@
         "elections-local-2022"
       ],
       "property": "share_green_local",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
       "breaks": [0, 3.6, 5.7, 8.5, 14, 51.6],
       "format": "percent",
       "minzoom": 8,
@@ -1164,7 +1164,7 @@
         "elections-local-2022"
       ],
       "property": "share_reform_local",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C9EAEC", "#9BDDE5", "#6DD0DD", "#3FC3D6", "#12B6CF"],
       "breaks": [0, 3.8],
       "format": "percent",
       "minzoom": 8,
@@ -1197,7 +1197,7 @@
         "elections-london-2021"
       ],
       "property": "leader_key_mayor",
-      "palette": ["labour", "#d62728", "conservative", "#2774ae", "liberal_democrat", "#f3c300", "green", "#2e8b57", "reform", "#34a5c8", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
       "breaks": [],
       "format": "text",
       "minzoom": 8,
@@ -1228,27 +1228,27 @@
           {
             "property": "share_labour_mayor",
             "label": "Labour",
-            "color": "#d62728"
+            "color": "#E4003B"
           },
           {
             "property": "share_conservative_mayor",
             "label": "Conservative",
-            "color": "#2774ae"
+            "color": "#0087DC"
           },
           {
             "property": "share_liberal_democrat_mayor",
             "label": "Liberal Democrats",
-            "color": "#f3c300"
+            "color": "#FAA61A"
           },
           {
             "property": "share_green_mayor",
             "label": "Green",
-            "color": "#2e8b57"
+            "color": "#6AB023"
           },
           {
             "property": "share_reform_mayor",
             "label": "Reform UK",
-            "color": "#34a5c8"
+            "color": "#12B6CF"
           }
         ]
       }
@@ -1343,7 +1343,7 @@
         "elections-london-2021"
       ],
       "property": "share_labour_mayor",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
       "breaks": [9.5, 27.7, 35.7, 41.7, 47.4, 53, 63.8],
       "format": "percent",
       "minzoom": 8,
@@ -1376,7 +1376,7 @@
         "elections-london-2021"
       ],
       "property": "share_conservative_mayor",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
       "breaks": [8.2, 20.2, 26.7, 32.6, 39.6, 50.4, 74.3],
       "format": "percent",
       "minzoom": 8,
@@ -1409,7 +1409,7 @@
         "elections-london-2021"
       ],
       "property": "share_liberal_democrat_mayor",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F7E6C8", "#F8D69C", "#F8C671", "#F9B645", "#FAA61A"],
       "breaks": [1, 1.9, 2.4, 3.2, 3.9, 5.7, 16.2],
       "format": "percent",
       "minzoom": 8,
@@ -1442,7 +1442,7 @@
         "elections-london-2021"
       ],
       "property": "share_green_mayor",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
       "breaks": [2.4, 4.8, 6.1, 7.6, 9.2, 11.5, 22.4],
       "format": "percent",
       "minzoom": 8,
@@ -1475,7 +1475,7 @@
         "elections-london-2021"
       ],
       "property": "share_reform_mayor",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C9EAEC", "#9BDDE5", "#6DD0DD", "#3FC3D6", "#12B6CF"],
       "breaks": [0, 100],
       "format": "percent",
       "minzoom": 8,
@@ -1508,7 +1508,7 @@
         "elections-london-2021"
       ],
       "property": "leader_key_assembly",
-      "palette": ["labour", "#d62728", "conservative", "#2774ae", "liberal_democrat", "#f3c300", "green", "#2e8b57", "reform", "#34a5c8", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
       "breaks": [],
       "format": "text",
       "minzoom": 8,
@@ -1539,27 +1539,27 @@
           {
             "property": "share_labour_assembly",
             "label": "Labour",
-            "color": "#d62728"
+            "color": "#E4003B"
           },
           {
             "property": "share_conservative_assembly",
             "label": "Conservative",
-            "color": "#2774ae"
+            "color": "#0087DC"
           },
           {
             "property": "share_liberal_democrat_assembly",
             "label": "Liberal Democrats",
-            "color": "#f3c300"
+            "color": "#FAA61A"
           },
           {
             "property": "share_green_assembly",
             "label": "Green",
-            "color": "#2e8b57"
+            "color": "#6AB023"
           },
           {
             "property": "share_reform_assembly",
             "label": "Reform UK",
-            "color": "#34a5c8"
+            "color": "#12B6CF"
           }
         ]
       }
@@ -1654,7 +1654,7 @@
         "elections-london-2021"
       ],
       "property": "share_labour_assembly",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
       "breaks": [7.1, 23.2, 31.8, 41.4, 48.2, 53.7, 70.9],
       "format": "percent",
       "minzoom": 8,
@@ -1687,7 +1687,7 @@
         "elections-london-2021"
       ],
       "property": "share_conservative_assembly",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
       "breaks": [6.3, 14.8, 21.2, 27.5, 34.4, 45.8, 68.1],
       "format": "percent",
       "minzoom": 8,
@@ -1720,7 +1720,7 @@
         "elections-london-2021"
       ],
       "property": "share_liberal_democrat_assembly",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#F7E6C8", "#F8D69C", "#F8C671", "#F9B645", "#FAA61A"],
       "breaks": [1.5, 2.8, 3.8, 5, 6.7, 9.6, 34.2],
       "format": "percent",
       "minzoom": 8,
@@ -1753,7 +1753,7 @@
         "elections-london-2021"
       ],
       "property": "share_green_assembly",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
       "breaks": [3, 6.6, 9.4, 11.6, 14.3, 17.1, 30.2],
       "format": "percent",
       "minzoom": 8,
@@ -1786,7 +1786,7 @@
         "elections-london-2021"
       ],
       "property": "share_reform_assembly",
-      "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
+      "palette": ["#F7F7F4", "#C9EAEC", "#9BDDE5", "#6DD0DD", "#3FC3D6", "#12B6CF"],
       "breaks": [0.3, 0.6, 0.8, 0.9, 1.1, 1.4, 2.9],
       "format": "percent",
       "minzoom": 8,
@@ -1808,20 +1808,20 @@
     {
       "id": "domestic-property-age",
       "group": "buildings",
-      "kind": "point",
+      "kind": "fill",
       "label": "Domestic property construction age",
       "shortLabel": "Construction age",
       "description": "Domestic properties only. Construction age may be modelled where no direct source record is available.",
-      "methodology": "One point per LBSM2 building coordinate, coloured by the modal construction-age band of domestic property records at that location. The tooltip reports the direct/modelled status and property count.",
+      "methodology": "OS OpenMap Local building outlines matched spatially to LBSM2 domestic-property locations, coloured by the modal construction-age band of domestic property records in each matched outline. The tooltip reports the direct/modelled status and property count.",
       "unit": "age band",
-      "referenceDate": "LBSM2 snapshot October 2024",
-      "geography": "domestic property location",
+      "referenceDate": "LBSM2 snapshot October 2024; OS OpenMap Local August 2026",
+      "geography": "generalised building outline",
       "sourceIds": [
         "domestic-properties"
       ],
       "property": "age_band_code",
-      "palette": ["#5b2a2a", "#7f3f32", "#a75e40", "#c77c53", "#dd9b6b", "#e9b885", "#f1cea1", "#d7cfc0", "#aebdc2", "#7898a5", "#d3d3cc"],
-      "breaks": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      "palette": ["#5b2a2a", "#7f3f32", "#a75e40", "#c77c53", "#dd9b6b", "#e9b885", "#f1cea1", "#d7cfc0"],
+      "breaks": [1, 2, 3, 4, 5, 6, 7, 8],
       "format": "integer",
       "minzoom": 11,
       "maxzoom": 17,
@@ -1855,10 +1855,10 @@
       "group": "transport",
       "kind": "transport-line",
       "label": "Underground lines",
-      "description": "Dated static TfL network snapshot; no live runtime dependency.",
+      "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
       "referenceDate": "2026-08-31",
-      "geography": "TfL network geometry",
+      "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
       ],
@@ -1887,7 +1887,7 @@
         "transportMode": "tube",
         "routeProperty": "route_id"
       },
-      "dataStatus": "direct snapshot"
+      "dataStatus": "mixed OSM geometry / TfL metadata"
     },
     {
       "id": "transport-tube-stops",
@@ -1905,9 +1905,9 @@
       "palette": "#1f5f8b",
       "breaks": [],
       "format": "text",
-      "minzoom": 11,
+      "minzoom": 9,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#1f5f8b",
       "tooltip": [
         {
@@ -1932,10 +1932,10 @@
       "group": "transport",
       "kind": "transport-line",
       "label": "DLR lines",
-      "description": "Dated static TfL network snapshot; no live runtime dependency.",
+      "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
       "referenceDate": "2026-08-31",
-      "geography": "TfL network geometry",
+      "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
       ],
@@ -1964,7 +1964,7 @@
         "transportMode": "dlr",
         "routeProperty": "route_id"
       },
-      "dataStatus": "direct snapshot"
+      "dataStatus": "mixed OSM geometry / TfL metadata"
     },
     {
       "id": "transport-dlr-stops",
@@ -1982,9 +1982,9 @@
       "palette": "#00A4A7",
       "breaks": [],
       "format": "text",
-      "minzoom": 11,
+      "minzoom": 9,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#00A4A7",
       "tooltip": [
         {
@@ -2009,10 +2009,10 @@
       "group": "transport",
       "kind": "transport-line",
       "label": "Trams lines",
-      "description": "Dated static TfL network snapshot; no live runtime dependency.",
+      "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
       "referenceDate": "2026-08-31",
-      "geography": "TfL network geometry",
+      "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
       ],
@@ -2041,7 +2041,7 @@
         "transportMode": "tram",
         "routeProperty": "route_id"
       },
-      "dataStatus": "direct snapshot"
+      "dataStatus": "mixed OSM geometry / TfL metadata"
     },
     {
       "id": "transport-tram-stops",
@@ -2059,9 +2059,9 @@
       "palette": "#84B817",
       "breaks": [],
       "format": "text",
-      "minzoom": 11,
+      "minzoom": 9,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#84B817",
       "tooltip": [
         {
@@ -2086,10 +2086,10 @@
       "group": "transport",
       "kind": "transport-line",
       "label": "Overground lines",
-      "description": "Dated static TfL network snapshot; no live runtime dependency.",
+      "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
       "referenceDate": "2026-08-31",
-      "geography": "TfL network geometry",
+      "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
       ],
@@ -2118,7 +2118,7 @@
         "transportMode": "overground",
         "routeProperty": "route_id"
       },
-      "dataStatus": "direct snapshot"
+      "dataStatus": "mixed OSM geometry / TfL metadata"
     },
     {
       "id": "transport-overground-stops",
@@ -2136,9 +2136,9 @@
       "palette": "#EE7C0E",
       "breaks": [],
       "format": "text",
-      "minzoom": 11,
+      "minzoom": 9,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#EE7C0E",
       "tooltip": [
         {
@@ -2163,10 +2163,10 @@
       "group": "transport",
       "kind": "transport-line",
       "label": "Elizabeth line lines",
-      "description": "Dated static TfL network snapshot; no live runtime dependency.",
+      "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
       "referenceDate": "2026-08-31",
-      "geography": "TfL network geometry",
+      "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
       ],
@@ -2195,7 +2195,7 @@
         "transportMode": "elizabeth-line",
         "routeProperty": "route_id"
       },
-      "dataStatus": "direct snapshot"
+      "dataStatus": "mixed OSM geometry / TfL metadata"
     },
     {
       "id": "transport-elizabeth-line-stops",
@@ -2213,9 +2213,9 @@
       "palette": "#6950A1",
       "breaks": [],
       "format": "text",
-      "minzoom": 11,
+      "minzoom": 9,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#6950A1",
       "tooltip": [
         {
@@ -2240,7 +2240,7 @@
       "group": "transport",
       "kind": "transport-line",
       "label": "Buses lines",
-      "description": "Dated static TfL network snapshot; no live runtime dependency.",
+      "description": "Dated static TfL route geometry; no live runtime dependency.",
       "unit": "",
       "referenceDate": "2026-08-31",
       "geography": "TfL network geometry",
@@ -5578,7 +5578,7 @@
       "format": "text",
       "minzoom": 13,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#C62828",
       "tooltip": [
         {
@@ -8900,9 +8900,9 @@
       "palette": "#E31B6D",
       "breaks": [],
       "format": "text",
-      "minzoom": 11,
+      "minzoom": 9,
       "maxzoom": 18,
-      "opacity": 0.95,
+      "opacity": 0.98,
       "lineColor": "#E31B6D",
       "tooltip": [
         {
@@ -8981,12 +8981,26 @@
       "retrieved": "2026-08-31"
     },
     {
+      "title": "OS OpenMap Local",
+      "organisation": "Ordnance Survey",
+      "url": "https://www.ordnancesurvey.co.uk/products/os-open-map-local",
+      "licence": "Open Government Licence v3.0",
+      "retrieved": "2026-08-31"
+    },
+    {
       "title": "TfL Open Data",
       "organisation": "Transport for London",
       "url": "https://tfl.gov.uk/info-for/open-data-users/our-open-data",
       "licence": "TfL open-data terms",
       "retrieved": "2026-08-31"
+    },
+    {
+      "title": "OpenStreetMap rail route relations",
+      "organisation": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "licence": "Open Data Commons Open Database License",
+      "retrieved": "2026-08-31"
     }
   ],
-  "notes": ["LSOA21 is the standard small-area geography for population, foreign-born, education and work.", "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.", "Foreign citizenship and foreign-born change are deliberately excluded.", "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.", "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.", "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."]
+  "notes": ["LSOA21 is the standard small-area geography for population, foreign-born, education and work.", "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.", "Foreign citizenship and foreign-born change are deliberately excluded.", "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.", "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.", "City of London wards are No data in the 2022 borough-election layers because the City holds separate Common Council elections outside the GLA borough-results workbook.", "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."]
 }

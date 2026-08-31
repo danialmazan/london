@@ -22,12 +22,12 @@ For every area, `lead_votes` is the leader's votes minus the runner-up's votes. 
 
 ## Buildings
 
-Construction age comes from London Building Stock Model 2. Multiple domestic-property records at one building coordinate are consolidated into one point using the modal age band; the feature retains the property count and the share of direct age records. The visible caveat is: **Domestic properties only. Construction age may be modelled where no direct source record is available.**
+Construction age comes from London Building Stock Model 2. Domestic-property locations are spatially matched to OS OpenMap Local generalised building outlines. Multiple records in one matched outline are consolidated using the modal age band; each feature retains the domestic-property count and share of direct age records. Unmatched outlines are not assigned an age. The visible caveat is: **Domestic properties only. Construction age may be modelled where no direct source record is available.**
 
 The historical EMU building-height viewer used the same broad LiDAR-derived method family contemplated here, but the former data page no longer exposes a verified redistribution licence. The atlas therefore withholds building height. A future open build should derive height from Environment Agency DSM/DTM data and an open, redistribution-compatible footprint source, then validate coverage and outliers before publication.
 
 ## Transport and missing data
 
-Transport is a dated static snapshot, not a live service: TfL API rail sequences and Santander docks plus official TfL ArcGIS bus route/stop geometry. All source dates are stored in the features and manifest.
+Transport is a dated static snapshot, not a live service. Rail paths use actual OpenStreetMap route-relation geometry, combined with TfL API service identity, station locations and colours. Santander docks come from the TfL API; bus routes and stops use official TfL ArcGIS geometry. All source dates and attributions are stored in the features and manifest.
 
-Missing, suppressed, unmatched or uncovered observations remain `No data`; they are never imputed as zero. Foreign citizenship and foreign-born change are not produced.
+Missing, suppressed, unmatched or uncovered observations remain `No data`; they are never imputed as zero. The GLA 2022 borough-election workbook excludes the City of London's separate Common Council elections, so City wards remain `No data`. Foreign citizenship and foreign-born change are not produced.

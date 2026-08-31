@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-08-31 07:01:57Z",
+  "validatedAt": "2026-08-31 17:47:07Z",
   "status": "pass",
   "layerCount": 62,
   "reportCount": 4994,
@@ -10,10 +10,16 @@
     "excluded2024LondonElectionsAbsent": true,
     "leftRightSplitAbsent": true,
     "electionLeadVotesAndPercentPresent": true,
+    "defaultDensityAndViridis": true,
+    "partyColoursVerified": true,
+    "buildingOutlinesVerified": true,
+    "reportDistributionsVerified": true,
+    "brentForeignBornDenominatorVerified": true,
+    "santanderDocksVerified": true,
     "missingValuesPreserved": true
   },
   "archiveBytes": {
-    "lsoa21.pmtiles": 16624672,
+    "lsoa21.pmtiles": 17289236,
     "msoa21.pmtiles": 1779444,
     "elections-general-2024.pmtiles": 493626,
     "elections-local-2022.pmtiles": 1923392,

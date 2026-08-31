@@ -28,6 +28,26 @@ for (key in election_keys) {
 }
 
 if (length(reports$sections) < 4800) stop("Too few LSOA reports: ", length(reports$sections))
+if (!identical(manifest$defaultLayer, "population-density")) stop("Population density must be the default layer")
+density_layer <- manifest$layers[[match("population-density", layer_ids)]]
+if (!identical(unlist(density_layer$palette), c("#440154", "#414487", "#2a788e", "#22a884", "#7ad151", "#fde725"))) stop("Population density palette must match the Madrid viridis palette")
+building_layer <- manifest$layers[[match("domestic-property-age", layer_ids)]]
+if (!identical(building_layer$kind, "fill")) stop("Domestic construction age must render as building outlines")
+party_expected <- c(labour = "#E4003B", conservative = "#0087DC", liberal_democrat = "#FAA61A", green = "#6AB023", reform = "#12B6CF")
+for (party in names(party_expected)) {
+  party_layer <- manifest$layers[[match(paste0("general-", party), layer_ids)]]
+  if (!identical(tail(unlist(party_layer$palette), 1), unname(party_expected[[party]]))) stop("Wrong map colour for ", party)
+}
+brent <- reports$sections[["E01000633"]]
+if (abs(brent$metrics$foreign_born_pct$value - 71.66347992) > 1e-6 || brent$metrics$foreign_born_pct$note != "1,874 of 2,615 usual residents") stop("Brent 019D foreign-born denominator regression")
+if (is.null(brent$metrics$population_density_km2$distribution) || brent$metrics$population_density_km2$distribution$observationCount != 4994) stop("Report distributions are missing")
+
+transport_path <- file.path(processed_dir, "transport.geojson")
+if (file.exists(transport_path)) {
+  transport <- st_read(transport_path, quiet = TRUE)
+  if (sum(transport$mode == "santander" & transport$feature_type == "dock", na.rm = TRUE) < 700) stop("Santander docks are missing")
+  if (!any(transport$mode == "tube" & transport$feature_type == "line", na.rm = TRUE)) stop("Actual rail line features are missing")
+}
 
 archive_sizes <- setNames(file.info(file.path(public_data_dir, required[grepl("pmtiles$", required)]))$size, required[grepl("pmtiles$", required)])
 if (any(archive_sizes <= 0)) stop("One or more PMTiles archives are empty")
@@ -42,6 +62,12 @@ validation <- list(
     excluded2024LondonElectionsAbsent = TRUE,
     leftRightSplitAbsent = TRUE,
     electionLeadVotesAndPercentPresent = TRUE,
+    defaultDensityAndViridis = TRUE,
+    partyColoursVerified = TRUE,
+    buildingOutlinesVerified = TRUE,
+    reportDistributionsVerified = TRUE,
+    brentForeignBornDenominatorVerified = TRUE,
+    santanderDocksVerified = TRUE,
     missingValuesPreserved = TRUE
   ),
   archiveBytes = as.list(archive_sizes)

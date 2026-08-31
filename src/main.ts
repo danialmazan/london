@@ -7,7 +7,7 @@ import maplibregl, {
 import { Protocol } from "pmtiles";
 import "./styles.css";
 import { LONDON_CAMERA, parseHash, serializeState } from "./state";
-import { renderLondonElectionCard, renderSectionReport, sectionProperties } from "./report";
+import { renderLondonElectionCard, renderSectionReport, renderThemeSectionCard } from "./report";
 import { renderFeatureActions } from "./feature-actions";
 import { shareOrCopy } from "./share";
 import type {
@@ -431,7 +431,8 @@ async function applyMapLayers(): Promise<void> {
       layer.control?.transportMode &&
       atlasState.transport.includes(layer.control.transportMode),
   );
-  for (const overlay of overlays) addDefinitionToMap(overlay, true);
+  for (const overlay of overlays.filter((layer) => layer.kind === "transport-line")) addDefinitionToMap(overlay, true);
+  for (const overlay of overlays.filter((layer) => layer.kind === "transport-stop")) addDefinitionToMap(overlay, true);
   addSelectedSectionOutline();
   pitchButton.setAttribute("aria-pressed", String(atlasState.is3d));
 }
@@ -490,7 +491,11 @@ function addDefinitionToMap(definition: LayerDefinition, overlay: boolean): void
       );
     } else if (definition.kind === "transport-line") {
       const filter = routeFilter(definition);
-      const lineColor: string | ExpressionSpecification = definition.lineColor || "#145c9e";
+      const lineColor: string | ExpressionSpecification = [
+        "coalesce",
+        ["get", "route_color"],
+        definition.lineColor || "#145c9e",
+      ];
       map.addLayer(
         {
           ...common,
@@ -518,15 +523,16 @@ function addDefinitionToMap(definition: LayerDefinition, overlay: boolean): void
       );
     } else if (definition.kind === "transport-stop") {
       const filter = routeFilter(definition);
+      const isSantander = definition.control?.transportMode === "santander";
       map.addLayer(
         {
           ...common,
           type: "circle",
           paint: {
-            "circle-radius": ["interpolate", ["linear"], ["zoom"], 11, 2, 15, 5],
-            "circle-color": definition.lineColor || "#ffffff",
-            "circle-stroke-color": "#161613",
-            "circle-stroke-width": 1,
+            "circle-radius": ["interpolate", ["linear"], ["zoom"], 9, isSantander ? 3.2 : 2.4, 15, isSantander ? 6.2 : 5.5],
+            "circle-color": isSantander ? ["coalesce", ["get", "route_color"], "#E31B6D"] : "#ffffff",
+            "circle-stroke-color": isSantander ? "#ffffff" : ["coalesce", ["get", "route_color"], definition.lineColor || "#161613"],
+            "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 9, 1.4, 15, 2.2],
             "circle-opacity": definition.opacity ?? 0.96,
           },
           ...(filter ? { filter } : {}),
@@ -1007,13 +1013,12 @@ async function renderSelectedSection(sectionId: string): Promise<void> {
       return;
     }
     const definition = getSelectedLayer();
-    renderFeatureDetails(
-      definition,
-      sectionProperties(report, definition),
-      report.name,
-      report.district,
-      true,
-    );
+    currentFeatureTitle = report.name;
+    updateDetailsToggleLabel();
+    featurePanel.innerHTML = renderThemeSectionCard(report, definition);
+    bindSectionCardActions();
+    if (isMobileViewport()) setMobilePanel(true, "details");
+    revealFeatureActions();
   } catch (error) {
     console.warn("Section report index could not be loaded", error);
     featurePanel.innerHTML = '<p class="feature-empty">Section details are temporarily unavailable.</p>';
@@ -1077,18 +1082,11 @@ function bindSectionCardActions(): void {
 }
 
 function handleMapClick(event: MapMouseEvent): void {
-  const selectedDefinition = getSelectedLayer();
-  if (
-    atlasState.dataLayerVisible &&
-    selectedDefinition.kind === "point" &&
-    selectCanonicalSectionAtPoint(event)
-  ) {
-    return;
-  }
   const features = map
     .queryRenderedFeatures(event.point)
     .filter((feature) => activeMapLayerIds.includes(feature.layer.id));
-  const feature = features[0];
+  const selectedLayerPrefix = `atlas-${getSelectedLayer().id}-`;
+  const feature = features.find((candidate) => candidate.layer.id.startsWith(selectedLayerPrefix)) ?? features[0];
   if (!feature) {
     clearSelectedSection();
     void renderFeaturePanelForState();
@@ -1097,6 +1095,7 @@ function handleMapClick(event: MapMouseEvent): void {
   const definition = manifest.layers.find((candidate) =>
     feature.layer.id.startsWith(`atlas-${candidate.id}-`),
   );
+  if (definition?.group === "elections" && selectCanonicalSectionAtPoint(event)) return;
   if (definition && isCensusSectionLayer(definition)) {
     const canonical = map.queryRenderedFeatures(event.point, { layers: [SECTION_HIT_LAYER] })[0];
     const sectionId = canonical?.properties?.section_id;
@@ -1130,12 +1129,6 @@ function selectCanonicalSectionAtPoint(event: MapMouseEvent): boolean {
 
 function handleMapHover(event: MapMouseEvent): void {
   if (!map) return;
-  const selectedDefinition = getSelectedLayer();
-  if (atlasState.dataLayerVisible && selectedDefinition.kind === "point") {
-    const section = map.queryRenderedFeatures(event.point, { layers: [SECTION_HIT_LAYER] })[0];
-    map.getCanvas().style.cursor = section ? "pointer" : "";
-    return;
-  }
   const features = map
     .queryRenderedFeatures(event.point)
     .filter((feature) => activeMapLayerIds.includes(feature.layer.id));
@@ -1153,9 +1146,9 @@ function renderFeature(feature: MapGeoJSONFeature): void {
   const isBuilding = definition.group === "buildings";
   const buildingId = properties.building_id || properties.height_id;
   const title = isBuilding
-    ? definition.id === "building-age"
-      ? "Catastro building"
-      : "Municipal height polygon"
+    ? definition.id === "domestic-property-age"
+      ? "Domestic property building"
+      : "Building height polygon"
     : properties.name ||
       properties.stop_name ||
       properties.route_long_name ||

@@ -1288,6 +1288,12 @@ select:focus-visible,
   font-size: 0.56rem;
 }
 
+.report-metric-value small {
+  color: var(--muted);
+  font-size: 0.54rem;
+  line-height: 1.35;
+}
+
 .distribution-chart-shell {
   position: relative;
   min-width: 0;
@@ -1406,8 +1412,64 @@ select:focus-visible,
 
 .report-election-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.report-no-data {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.report-geography-list {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 0;
+  margin: 0;
+  overflow: hidden;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+
+.report-geography-list > div {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.55fr) minmax(0, 1.45fr);
+  gap: 18px;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--line);
+}
+
+.report-geography-list > div:last-child {
+  border-bottom: 0;
+}
+
+.report-geography-list dt {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.report-geography-list dd {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 12px;
+  align-items: baseline;
+  min-width: 0;
+  margin: 0;
+}
+
+.report-geography-list dd strong {
+  overflow-wrap: anywhere;
+}
+
+.report-geography-list dd span,
+.report-geography-list dd small {
+  color: var(--muted);
+  font-family: "Geist Mono", monospace;
+  font-size: 0.55rem;
 }
 
 .report-election {
