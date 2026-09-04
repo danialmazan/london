@@ -5,6 +5,7 @@ steps <- c(
   "scripts/04_prepare_elections.R",
   "scripts/05_prepare_transport.R",
   "scripts/05_prepare_buildings.R",
+  "scripts/05a_prepare_population_dots.R",
   "scripts/06_build_tiles.R",
   "scripts/07_build_manifest.R",
   "scripts/08_build_area_reports.R",

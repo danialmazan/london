@@ -8,6 +8,7 @@ import { Protocol } from "pmtiles";
 import "./styles.css";
 import { LONDON_CAMERA, parseHash, serializeState } from "./state";
 import { renderLondonElectionCard, renderSectionReport, renderThemeSectionCard } from "./report";
+import { bindDistributionCharts } from "./report-interaction";
 import { renderFeatureActions } from "./feature-actions";
 import { shareOrCopy } from "./share";
 import type {
@@ -474,7 +475,24 @@ function addDefinitionToMap(definition: LayerDefinition, overlay: boolean): void
       maxzoom: definition.maxzoom,
     };
 
-    if (definition.kind === "point") {
+    if (definition.kind === "dot-density") {
+      map.addLayer(
+        {
+          ...common,
+          type: "circle",
+          paint: {
+            "circle-radius": zoomInterpolation(definition.dotRadiusStops ?? [[8, 0.45], [16, 2.3]]),
+            "circle-color": definition.dotColors?.[atlasState.basemap] ?? definition.palette[0] ?? "#145C9E",
+            "circle-opacity": zoomInterpolation(definition.dotOpacityStops ?? [[8, 0.55], [15, 0.86]]),
+            "circle-stroke-width": 0,
+            "circle-blur": 0,
+            "circle-pitch-scale": "viewport",
+            "circle-pitch-alignment": "viewport",
+          },
+        },
+        beforeId,
+      );
+    } else if (definition.kind === "point") {
       map.addLayer(
         {
           ...common,
@@ -578,6 +596,12 @@ function addDefinitionToMap(definition: LayerDefinition, overlay: boolean): void
     }
     activeMapLayerIds.push(id);
   }
+}
+
+function zoomInterpolation(stops: Array<[number, number]>): ExpressionSpecification {
+  const expression: unknown[] = ["interpolate", ["linear"], ["zoom"]];
+  for (const [zoom, value] of stops) expression.push(zoom, value);
+  return expression as ExpressionSpecification;
 }
 
 function routeFilter(definition: LayerDefinition): ExpressionSpecification | undefined {
@@ -906,6 +930,17 @@ function renderLegend(): void {
   legendTitle.textContent = selected.label;
   legendDate.textContent = shortDate(selected.referenceDate);
 
+  if (selected.kind === "dot-density") {
+    const dotColor = selected.dotColors?.[atlasState.basemap] ?? selected.palette[0] ?? "#145C9E";
+    legend.innerHTML = `
+      <div class="legend-dot-key">
+        <i style="background:${escapeHtml(dotColor)}"></i>
+        <span>1 dot = ${(selected.dotValue ?? 25).toLocaleString("en-GB")} residents</span>
+      </div>
+      <p class="legend-note">${escapeHtml(selected.description)}</p>`;
+    return;
+  }
+
   if (selected.format === "text") {
     const rows: string[] = [];
     for (let index = 0; index < selected.palette.length; index += 2) {
@@ -954,6 +989,7 @@ function renderMethodology(): void {
   methodologyContent.innerHTML = `
     <section class="method-section">
       <h3>How to read the atlas</h3>
+      <p>This is the London version of the original <a href="https://danielalmazan.com/madrid/" target="_blank" rel="noreferrer">Madrid Atlas ↗</a>.</p>
       <p>
         Thematic layers are mutually exclusive, while transport networks can be combined.
         Every layer retains its native official geography and reference date.
@@ -1044,6 +1080,7 @@ async function openSelectedSectionReport(updateState = true): Promise<void> {
     if (!report) throw new Error(`Unknown report section ${sectionId}`);
     reportDialogTitle.textContent = report.name;
     reportContent.innerHTML = renderSectionReport(index, report);
+    reportChartCleanup = bindDistributionCharts(reportContent, index);
     atlasState.reportOpen = true;
     if (updateState) scheduleHashUpdate(true);
   } catch (error) {

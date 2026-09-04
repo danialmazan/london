@@ -43,7 +43,7 @@ layer <- function(id, group, label, description, property, data, format, unit, g
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
 layers <- list(
-  layer("population-total", "population", "Resident population", "ONS mid-2024 usual-resident estimate.", "population_total", lsoa, "integer", "residents", "LSOA21", "2024-06-30", "lsoa21", palette_blue, short_label = "Residents", tooltip_fields = list(tooltip("population_total", "Residents", "integer", "population_total_percentile"))),
+  modifyList(layer("population-total", "population", "Resident population", "One modelled dot represents 25 mid-2024 residents. Dots are allocated within OS building outlines using London Building Stock Model domestic-property counts; they are not exact resident or household locations. One LSOA without a matched domestic-property outline uses its LSOA polygon as a fallback.", "population_total", lsoa, "integer", "residents", "LSOA21", "2024-06-30", "resident-dots", palette_blue, short_label = "Residents", tooltip_fields = list(tooltip("population_total", "Residents", "integer", "population_total_percentile")), data_status = "modelled"), list(kind = "dot-density", minzoom = 8, maxzoom = 17, dotValue = 25, dotColors = list(light = "#145c9e", dark = "#f6c85f"), dotRadiusStops = list(c(8, 0.45), c(16, 2.3)), dotOpacityStops = list(c(8, 0.55), c(15, 0.86)))),
   layer("population-density", "population", "Population density", "Mid-2024 residents divided by the ONS LSOA21 polygon area.", "population_density_km2", lsoa, "integer", "residents/km²", "LSOA21", "2024-06-30", "lsoa21", palette_viridis, short_label = "Density", data_status = "derived", tooltip_fields = list(tooltip("population_density_km2", "Residents per km²", "integer", "population_density_km2_percentile"))),
   layer("under-18", "population", "Residents under 18", "Share of mid-2024 residents aged 0–17.", "under18_pct", lsoa, "percent", "%", "LSOA21", "2024-06-30", "lsoa21", palette_teal, short_label = "Under 18", tooltip_fields = list(tooltip("under18_pct", "Under 18", "percent", "under18_pct_percentile"))),
   layer("age-65-plus", "population", "Residents aged 65+", "Share of mid-2024 residents aged 65 or over.", "age65plus_pct", lsoa, "percent", "%", "LSOA21", "2024-06-30", "lsoa21", palette_orange, short_label = "Age 65+", tooltip_fields = list(tooltip("age65plus_pct", "Age 65+", "percent", "age65plus_pct_percentile"))),
@@ -86,15 +86,15 @@ for (key in names(election_specs)) {
 }
 
 if (file.exists(file.path(public_data_dir, "domestic-properties.pmtiles"))) {
-  age_colours <- c("#5b2a2a", "#7f3f32", "#a75e40", "#c77c53", "#dd9b6b", "#e9b885", "#f1cea1", "#d7cfc0")
+  age_colours <- c("#184e77", "#52b69a", "#d9ed92", "#f9c74f", "#f9844a", "#c1121f")
   layers[[length(layers) + 1]] <- list(
     id = "domestic-property-age", group = "buildings", kind = "fill",
     label = "Domestic property construction age", shortLabel = "Construction age",
     description = "Domestic properties only. Construction age may be modelled where no direct source record is available.",
     methodology = "OS OpenMap Local building outlines matched spatially to LBSM2 domestic-property locations, coloured by the modal construction-age band of domestic property records in each matched outline. The tooltip reports the direct/modelled status and property count.",
     unit = "age band", referenceDate = "LBSM2 snapshot October 2024; OS OpenMap Local August 2026", geography = "generalised building outline",
-    sourceIds = list("domestic-properties"), property = "age_band_code", palette = age_colours,
-    breaks = 1:8, format = "integer", minzoom = 11, maxzoom = 17, opacity = 0.9,
+    sourceIds = list("domestic-properties"), property = "construction_year_midpoint", palette = age_colours,
+    breaks = c(1700, 1900, 1940, 1960, 1980, 2000, 2027), format = "year", minzoom = 12, maxzoom = 17, opacity = 0.9,
     tooltip = list(
       tooltip("construction_age_band", "Construction age band", "text"),
       tooltip("domestic_properties", "Domestic properties", "integer"),
@@ -128,7 +128,7 @@ if (file.exists(file.path(public_data_dir, "transport.pmtiles"))) {
       description = "Dated static TfL stop/dock snapshot; availability is not shown.", unit = "",
       referenceDate = as.character(Sys.Date()), geography = "TfL stop or dock location", sourceIds = list("transport"),
       property = "name", palette = unname(transport_colours[[mode]]), breaks = numeric(), format = "text",
-      minzoom = ifelse(mode == "bus", 13, 9), maxzoom = 18, opacity = 0.98, lineColor = unname(transport_colours[[mode]]),
+      minzoom = ifelse(mode == "bus", 13, 8), maxzoom = 18, opacity = 0.98, lineColor = unname(transport_colours[[mode]]),
       tooltip = list(tooltip("name", ifelse(mode == "santander", "Dock", "Stop"), "text"), tooltip("snapshot_date", "Snapshot", "text")),
       control = c(list(transportMode = mode, routeProperty = "route_id"), if (mode == "bus") list(routes = routes) else list()),
       dataStatus = "direct snapshot"
@@ -143,8 +143,11 @@ sources_manifest <- list(
   list(id = "elections-local-2022", url = "data/elections-local-2022.pmtiles", sourceLayer = "wards2022", attribution = "Greater London Authority; ONS", minzoom = 8, maxzoom = 14),
   list(id = "elections-london-2021", url = "data/elections-london-2021.pmtiles", sourceLayer = "wards2021", attribution = "London Elects; ONS", minzoom = 8, maxzoom = 14)
 )
+if (file.exists(file.path(public_data_dir, "resident-dots.pmtiles"))) {
+  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "resident-dots", url = "data/resident-dots.pmtiles", sourceLayer = "resident_dots", attribution = "ONS; GLA London Building Stock Model 2; OS OpenMap Local © Crown copyright", minzoom = 8, maxzoom = 16)
+}
 if (file.exists(file.path(public_data_dir, "domestic-properties.pmtiles"))) {
-  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "domestic-properties", url = "data/domestic-properties.pmtiles", sourceLayer = "domestic_properties", attribution = "Greater London Authority LBSM2; OS OpenMap Local © Crown copyright", minzoom = 11, maxzoom = 15)
+  sources_manifest[[length(sources_manifest) + 1]] <- list(id = "domestic-properties", url = "data/domestic-properties.pmtiles", sourceLayer = "domestic_properties", attribution = "Greater London Authority LBSM2; OS OpenMap Local © Crown copyright", minzoom = 12, maxzoom = 15)
 }
 if (file.exists(file.path(public_data_dir, "transport.pmtiles"))) {
   sources_manifest[[length(sources_manifest) + 1]] <- list(id = "transport", url = "data/transport.pmtiles", sourceLayer = "transport", attribution = "TfL Open Data; © OpenStreetMap contributors", minzoom = 7, maxzoom = 16)
@@ -169,6 +172,7 @@ manifest <- list(
   defaultLayer = "population-density", sources = sources_manifest, layers = layers, references = references,
   notes = c(
     "LSOA21 is the standard small-area geography for population, foreign-born, education and work.",
+    "Resident dots are a dasymetric model: one dot represents 25 residents allocated to a building outline using domestic-property counts, not an exact person or household location. One unmatched LSOA uses its polygon as a documented fallback.",
     "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.",
     "Foreign citizenship and foreign-born change are deliberately excluded.",
     "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.",

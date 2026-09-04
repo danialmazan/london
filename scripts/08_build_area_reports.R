@@ -50,22 +50,25 @@ metric_metadata <- list(
   idaopi_rate = c("Income deprivation affecting older people", "percent", "%", "LSOA21", "2025")
 )
 
-distribution_for <- function(values, bins = 18L) {
+distribution_for <- function(values, metadata, bins = 18L) {
   values <- values[is.finite(values)]
   if (!length(values)) return(NULL)
+  ordered <- sort(values)
   limits <- range(values)
   if (limits[[1]] == limits[[2]]) limits[[2]] <- limits[[1]] + 1
   breaks <- seq(limits[[1]], limits[[2]], length.out = bins + 1L)
   histogram <- hist(values, breaks = breaks, plot = FALSE, include.lowest = TRUE, right = TRUE)
   list(
+    label = metadata[[1]], format = metadata[[2]], unit = metadata[[3]],
     breaks = unname(histogram$breaks), counts = as.integer(histogram$counts),
-    observationCount = length(values), min = unname(min(values)), max = unname(max(values))
+    observationCount = length(values), min = unname(min(values)), max = unname(max(values)),
+    percentileValues = unname(ordered), percentileRanks = unname(percentile_rank(ordered))
   )
 }
 
 metric_distributions <- setNames(lapply(names(metric_metadata), function(field) {
   source_data <- if (field %in% c("income_bhc_gbp", "income_ahc_gbp")) st_drop_geometry(msoa) else st_drop_geometry(lsoa)
-  distribution_for(source_data[[field]])
+  distribution_for(source_data[[field]], metric_metadata[[field]])
 }), names(metric_metadata))
 
 metric_item <- function(row, field, metadata) {
@@ -74,7 +77,6 @@ metric_item <- function(row, field, metadata) {
     value = if (is.na(row[[field]])) NULL else unname(row[[field]]),
     percentile = if (!percentile_field %in% names(row) || is.na(row[[percentile_field]])) NULL else unname(row[[percentile_field]]),
     label = metadata[[1]], format = metadata[[2]], unit = metadata[[3]], geography = metadata[[4]], referenceDate = metadata[[5]],
-    distribution = metric_distributions[[field]],
     note = if (field == "foreign_born_pct" && !is.na(row$foreign_born_residents) && !is.na(row$census_usual_residents)) paste0(format(row$foreign_born_residents, big.mark = ",", scientific = FALSE), " of ", format(row$census_usual_residents, big.mark = ",", scientific = FALSE), " usual residents") else NULL
   )
 }
@@ -118,7 +120,7 @@ sections <- setNames(lapply(seq_len(nrow(combined)), function(index) {
 manifest <- fromJSON(file.path(public_data_dir, "layer-manifest.json"), simplifyVector = FALSE)
 report <- list(
   generatedAt = manifest$generatedAt, version = "1.0.0", canonicalVintage = "2021",
-  methodologyUrl = "docs/methodology.md", metricMetadata = metric_metadata,
+  methodologyUrl = "docs/methodology.md", metricMetadata = metric_metadata, distributions = metric_distributions,
   references = manifest$references, sections = sections
 )
 write_json(report, file.path(public_data_dir, "section-reports.json"), pretty = FALSE, auto_unbox = TRUE, na = "null", null = "null", digits = 8)

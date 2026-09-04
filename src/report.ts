@@ -16,13 +16,11 @@ export function renderThemeSectionCard(section: SectionReport, definition: Layer
     const key = definition.control?.election ?? "general";
     const item = section.elections[key];
     const nativeName = item.areaName ?? "No matching published result";
-    return `${header(`${section.name} – ${nativeName}`, `${section.district} · ${item.geography}`)}${electionSummary(item)}${key === "local" && !item.areaName ? cityElectionNote() : ""}${renderFeatureActions(definition.group, true)}`;
+    return `${header(`${section.name} – ${nativeName}`, electionGeographyLabel(key))}${electionSummary(item)}${key === "local" && !item.areaName ? cityElectionNote() : ""}${renderFeatureActions(definition.group, true)}`;
   }
   const keys = definition.group === "population" ? groups.population : definition.group === "education-work" ? groups.work : groups.income;
   const fields = keys.map((key) => compactMetric(section.metrics[key])).join("");
-  const note = definition.group === "population"
-    ? `<aside class="feature-data-note"><strong>Born outside the UK</strong><p>Census 2021 country-of-birth counts use all usual residents as the denominator. This is not citizenship.</p></aside>`
-    : definition.group === "income"
+  const note = definition.group === "income"
       ? `<aside class="feature-data-note"><strong>Mixed geography</strong><p>Income figures use the containing MSOA21; deprivation figures use this LSOA21. No values are downscaled.</p></aside>`
       : "";
   return `${header()}<dl class="feature-grid">${fields}</dl>${note}${renderFeatureActions(definition.group, true)}`;
@@ -35,9 +33,9 @@ export function renderLondonElectionCard(): string {
 export function renderSectionReport(index: SectionReportIndex, section: SectionReport): string {
   return `<article class="section-report-document">
     <header class="report-hero"><div><p class="report-overline">London small-area report · mixed official geographies</p><h2>${esc(section.name)}</h2><p class="report-id">LSOA21 ${esc(section.id)} · ${esc(section.district)}</p></div><div class="report-stamp"><span>London Atlas</span><strong>${esc(index.generatedAt.slice(0, 10))}</strong><small>danielalmazan.com</small></div></header>
-    ${chapter("01", "Population", "LSOA21", groups.population.map(key => reportMetric(section.metrics[key], key)).join(""))}
-    ${chapter("02", "Education & work", "LSOA21 · Census 2021", groups.work.map(key => reportMetric(section.metrics[key], key)).join(""))}
-    ${chapter("03", "Income & deprivation", "MSOA21 income; LSOA21 deprivation", groups.income.map(key => reportMetric(section.metrics[key], key)).join(""))}
+    ${chapter("01", "Population", "LSOA21", groups.population.map(key => reportMetric(index, section.metrics[key], key)).join(""))}
+    ${chapter("02", "Education & work", "LSOA21 · Census 2021", groups.work.map(key => reportMetric(index, section.metrics[key], key)).join(""))}
+    ${chapter("03", "Income & deprivation", "MSOA21 income; LSOA21 deprivation", groups.income.map(key => reportMetric(index, section.metrics[key], key)).join(""))}
     ${chapter("04", "Elections", "Constituency and ward results", `<div class="report-election-grid">${(["general", "local", "mayor", "assembly"] as ElectionKey[]).map(key => electionCard(section.elections[key], key)).join("")}</div>${!section.elections.local.areaName ? cityElectionNote() : ""}`)}
     ${chapter("05", "Geography crosswalk", "No values are downscaled between official units", `<dl class="report-geography-list">${Object.entries(section.geographies).map(([key, geo]) => `<div><dt>${esc(geographyLabel(key))}</dt><dd><strong>${geo.name ? esc(geo.name) : "No data"}</strong>${geo.id ? `<span>${esc(geo.id)}</span>` : ""}<small>${esc(geo.vintage)}</small></dd></div>`).join("")}</dl>`)}
     <footer class="report-sources"><h3>Sources & interpretation</h3><p>Percentiles and histograms compare valid observations on the metric's published geography. A higher percentile means a higher raw value, not necessarily a better outcome. Missing observations remain <strong>No data</strong>.</p><p>Foreign-born means born outside the United Kingdom and uses all Census 2021 usual residents as the denominator; it is not citizenship. MSOA income is not presented as an LSOA estimate.</p><p><strong>Domestic properties only.</strong> Construction age may be modelled where no direct source record is available.</p><ul>${index.references.map(r => `<li><a href="${esc(r.url)}">${esc(r.title)}</a> · ${esc(r.organisation)}<span>${esc(r.licence)} · retrieved ${esc(r.retrieved)}</span></li>`).join("")}</ul><p class="report-credit"><strong>danielalmazan.com</strong> · London Atlas</p></footer>
@@ -52,21 +50,24 @@ function compactMetric(item: ReportMetricValue | undefined): string {
   return `<div class="feature-stat"><dt>${esc(item.label)}</dt><dd>${esc(formatValue(item.value, item.format))}${esc(percentile)}</dd></div>`;
 }
 
-function reportMetric(item: ReportMetricValue | undefined, metric: string): string {
+function reportMetric(index: SectionReportIndex, item: ReportMetricValue | undefined, metric: string): string {
   if (!item) return "";
   const value = item.value;
+  const distribution = index.distributions[metric];
   const percentile = item.percentile === null ? "No percentile" : `${ordinal(Math.round(item.percentile))} percentile`;
-  return `<article class="report-metric${value === null ? " is-missing" : ""}"><div class="report-metric-value"><h4>${esc(item.label)}</h4><strong>${esc(formatValue(value, item.format))}</strong><span>${esc(percentile)} · ${esc(item.geography)} · ${esc(item.referenceDate)}</span>${item.note ? `<small>${esc(item.note)}</small>` : ""}</div>${value === null || !item.distribution ? noDataChart(item) : distributionChart(item, value, metric)}</article>`;
+  const sample = distribution ? ` · n=${distribution.observationCount.toLocaleString("en-GB")}` : "";
+  return `<article class="report-metric${value === null ? " is-missing" : ""}"><div class="report-metric-value"><h4>${esc(item.label)}</h4><strong>${esc(formatValue(value, item.format))}</strong><span>${esc(percentile)}${sample}</span>${item.note ? `<small>${esc(item.note)}</small>` : ""}</div>${value === null || !distribution ? noDataChart(item) : distributionChart(distribution, item, value, metric)}</article>`;
 }
 
-function distributionChart(item: ReportMetricValue, value: number, metric: string): string {
-  const distribution = item.distribution!;
+function distributionChart(distribution: SectionReportIndex["distributions"][string], item: ReportMetricValue, value: number, metric: string): string {
   const width = 260, height = 68, base = 52, maximum = Math.max(...distribution.counts, 1);
   const barWidth = width / Math.max(1, distribution.counts.length);
   const bars = distribution.counts.map((count, index) => { const h = Math.max(2, count / maximum * 38); return `<rect x="${(index * barWidth + 2).toFixed(1)}" y="${(base - h).toFixed(1)}" width="${Math.max(2, barWidth - 4).toFixed(1)}" height="${h.toFixed(1)}" rx="2" />`; }).join("");
   const low = distribution.breaks[0] ?? distribution.min ?? 0, high = distribution.breaks.at(-1) ?? distribution.max ?? low + 1;
   const x = Math.max(4, Math.min(width - 4, ((value - low) / Math.max(1e-9, high - low)) * width));
-  return `<div class="distribution-chart-shell"><svg class="distribution-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Distribution of ${esc(item.label)} across ${distribution.observationCount} areas" data-metric="${esc(metric)}"><g class="distribution-bars">${bars}</g><line class="distribution-marker" x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="5" y2="57"/><circle class="distribution-dot" cx="${x.toFixed(1)}" cy="7" r="4"/><text x="0" y="66">${esc(formatValue(low, item.format))}</text><text x="${width}" y="66" text-anchor="end">${esc(formatValue(high, item.format))}</text></svg></div>`;
+  const previewId = `distribution-preview-${metric}`;
+  const valueText = formatValue(value, item.format);
+  return `<div class="distribution-chart-shell"><svg class="distribution-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Distribution of ${esc(item.label)} across ${distribution.observationCount} areas" data-metric="${esc(metric)}" data-low="${low}" data-high="${high}" data-original-x="${x.toFixed(2)}" data-original-value="${value}"><g class="distribution-bars">${bars}</g><line class="distribution-marker" x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="5" y2="57"/><circle class="distribution-dot" cx="${x.toFixed(1)}" cy="7" r="4"/><text x="0" y="66">${esc(formatValue(low, item.format))}</text><text x="${width}" y="66" text-anchor="end">${esc(formatValue(high, item.format))}</text></svg><button class="distribution-drag-handle" type="button" role="slider" style="left:${((x / width) * 100).toFixed(4)}%" aria-label="Explore ${esc(item.label)} distribution. Hold and drag, or use the arrow keys." aria-valuemin="${low}" aria-valuemax="${high}" aria-valuenow="${value}" aria-valuetext="${esc(`${item.percentile === null ? "Unknown" : ordinal(Math.round(item.percentile))} percentile · ${valueText}`)}" aria-describedby="${previewId}"></button><output id="${previewId}" class="distribution-preview" hidden></output></div>`;
 }
 
 function noDataChart(item: ReportMetricValue): string { return `<div class="distribution-empty" role="img" aria-label="No published value for ${esc(item.label)}"><span></span><p>Not published for this area</p><span></span></div>`; }
@@ -78,6 +79,7 @@ function electionRows(item: ReportElection): string {
   return `<div class="election-comparisons">${shares.map(([party, value]) => `<div class="election-comparison"><div><i style="background:${partyColours[party] ?? "#777"}"></i><strong>${esc(partyNames[party] ?? party)}</strong><span>${formatValue(value, "percent")}</span></div><div class="comparison-track"><i style="width:${Math.min(100, (value ?? 0) / 60 * 100).toFixed(1)}%;background:${partyColours[party] ?? "#777"}"></i></div></div>`).join("")}</div>`;
 }
 function cityElectionNote(): string { return `<aside class="report-data-note"><strong>City of London</strong><p>The 2022 GLA borough-results workbook does not cover the City's separate Common Council elections, so these wards remain No data.</p></aside>`; }
+function electionGeographyLabel(key: ElectionKey): string { return key === "general" ? "Westminster constituency" : "Electoral ward"; }
 function geographyLabel(key: string): string { return ({ lsoa: "LSOA21", msoa: "MSOA21", ward2022: "Electoral ward 2022", ward2021: "Electoral ward 2021", constituency: "Westminster constituency 2024" } as Record<string, string>)[key] ?? key; }
 
 export function formatValue(value: number | null | undefined, format: ValueFormat, digits = 1): string {
@@ -87,5 +89,5 @@ export function formatValue(value: number | null | undefined, format: ValueForma
   if (format === "percent") return `${value.toFixed(digits)}%`;
   return value.toLocaleString("en-GB", { maximumFractionDigits: digits });
 }
-function ordinal(value: number): string { const mod100 = value % 100; if (mod100 >= 11 && mod100 <= 13) return `${value}th`; return `${value}${value % 10 === 1 ? "st" : value % 10 === 2 ? "nd" : value % 10 === 3 ? "rd" : "th"}`; }
+export function ordinal(value: number): string { const mod100 = value % 100; if (mod100 >= 11 && mod100 <= 13) return `${value}th`; return `${value}${value % 10 === 1 ? "st" : value % 10 === 2 ? "nd" : value % 10 === 3 ? "rd" : "th"}`; }
 function esc(value: unknown): string { return String(value ?? "").replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[c]!); }

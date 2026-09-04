@@ -50,6 +50,9 @@ ward22 <- arcgis_geojson(sources$ons_ward22_features) |>
 ward22 <- ward22[within_london(ward22), ]
 ward22$district <- boroughs$district[max.col(st_intersects(st_point_on_surface(ward22), boroughs, sparse = FALSE), ties.method = "first")]
 assert_unique(ward22, "ward_id", "London wards 2022")
+if (!setequal(unique(ward22$district), london_boroughs)) {
+  stop("London wards 2022 are missing boroughs: ", paste(setdiff(london_boroughs, unique(ward22$district)), collapse = ", "))
+}
 
 ward21 <- arcgis_geojson(sources$ons_ward21_features) |>
   normalise_area("WD21CD", "WD21NM", "ward_id", "ward_name") |>

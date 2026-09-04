@@ -77,8 +77,10 @@ arcgis_geojson <- function(feature_layer_url, bbox = c(-0.55, 51.20, 0.35, 51.75
     page <- suppressWarnings(st_read(url, quiet = TRUE, stringsAsFactors = FALSE))
     if (!nrow(page)) break
     pages[[length(pages) + 1L]] <- page
-    if (nrow(page) < page_size) break
-    offset <- offset + page_size
+    # ArcGIS services may enforce a lower maxRecordCount than requested. A
+    # short page therefore does not imply that it is the final page.
+    offset <- offset + nrow(page)
+    if (offset > 10000000L) stop("ArcGIS pagination exceeded its safety limit: ", feature_layer_url)
   }
   if (!length(pages)) stop("ArcGIS service returned no features: ", feature_layer_url)
   bind_rows(pages) |>

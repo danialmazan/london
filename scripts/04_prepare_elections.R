@@ -148,6 +148,10 @@ wards21 <- st_read(file.path(processed_dir, "wards-2021.geojson"), quiet = TRUE)
 if (mean(!is.na(constituencies$leader_general)) < 0.99) stop("General election join coverage below 99%")
 unmatched_local <- wards22 |> st_drop_geometry() |> filter(is.na(leader_local))
 if (sum(unmatched_local$district != "City of London") > 5) stop("Unexpected non-City 2022 ward election mismatches: ", paste(unmatched_local$ward_name[unmatched_local$district != "City of London"], collapse = ", "))
+for (borough_name in c("Barking and Dagenham", "Greenwich", "Lambeth")) {
+  borough_rows <- wards22$district == borough_name
+  if (!any(borough_rows) || any(is.na(wards22$leader_local[borough_rows]))) stop("Incomplete 2022 election coverage for ", borough_name)
+}
 message("2021 ward match coverage: mayor ", round(100 * mean(!is.na(wards21$leader_mayor)), 1), "%; Assembly ", round(100 * mean(!is.na(wards21$leader_assembly)), 1), "%")
 
 write_geojson(constituencies, "elections-general-2024.geojson")

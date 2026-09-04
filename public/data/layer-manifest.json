@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-31 14:19:06Z",
+  "generatedAt": "2026-09-04 07:46:30Z",
   "version": "1.0.0",
   "defaultLayer": "population-density",
   "sources": [
@@ -44,11 +44,19 @@
       "maxzoom": 14
     },
     {
+      "id": "resident-dots",
+      "url": "data/resident-dots.pmtiles",
+      "sourceLayer": "resident_dots",
+      "attribution": "ONS; GLA London Building Stock Model 2; OS OpenMap Local © Crown copyright",
+      "minzoom": 8,
+      "maxzoom": 16
+    },
+    {
       "id": "domestic-properties",
       "url": "data/domestic-properties.pmtiles",
       "sourceLayer": "domestic_properties",
       "attribution": "Greater London Authority LBSM2; OS OpenMap Local © Crown copyright",
-      "minzoom": 11,
+      "minzoom": 12,
       "maxzoom": 15
     },
     {
@@ -64,22 +72,22 @@
     {
       "id": "population-total",
       "group": "population",
-      "kind": "choropleth",
+      "kind": "dot-density",
       "label": "Resident population",
       "shortLabel": "Residents",
-      "description": "ONS mid-2024 usual-resident estimate.",
+      "description": "One modelled dot represents 25 mid-2024 residents. Dots are allocated within OS building outlines using London Building Stock Model domestic-property counts; they are not exact resident or household locations. One LSOA without a matched domestic-property outline uses its LSOA polygon as a fallback.",
       "unit": "residents",
       "referenceDate": "2024-06-30",
       "geography": "LSOA21",
       "sourceIds": [
-        "lsoa21"
+        "resident-dots"
       ],
       "property": "population_total",
       "palette": ["#edf3f8", "#ceddea", "#9ebfd5", "#6a9ab9", "#376f95", "#174b70"],
       "breaks": [947, 1498, 1631, 1757, 1900.9, 2128, 5317],
       "format": "integer",
       "minzoom": 8,
-      "maxzoom": 16,
+      "maxzoom": 17,
       "opacity": 0.78,
       "tooltip": [
         {
@@ -89,7 +97,20 @@
           "percentileProperty": "population_total_percentile"
         }
       ],
-      "dataStatus": "direct"
+      "dataStatus": "modelled",
+      "dotValue": 25,
+      "dotColors": {
+        "light": "#145c9e",
+        "dark": "#f6c85f"
+      },
+      "dotRadiusStops": [
+        [8, 0.45],
+        [16, 2.3]
+      ],
+      "dotOpacityStops": [
+        [8, 0.55],
+        [15, 0.86]
+      ]
     },
     {
       "id": "population-density",
@@ -957,7 +978,7 @@
       ],
       "property": "lead_percent_local",
       "palette": ["#f4eff7", "#ddd0e7", "#bea9d1", "#987fb6", "#70558f", "#4c3569"],
-      "breaks": [0, 8.8, 17.9, 28.2, 39.1, 49.4, 71.5],
+      "breaks": [0, 8.8, 18.2, 30.2, 40.7, 50.3, 81.9],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1033,7 +1054,7 @@
       ],
       "property": "share_labour_local",
       "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
-      "breaks": [6.2, 22.6, 36.7, 48.7, 58.9, 67, 84.2],
+      "breaks": [6.2, 25.3, 39.6, 50.9, 59.9, 67.9, 89],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1066,7 +1087,7 @@
       ],
       "property": "share_conservative_local",
       "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
-      "breaks": [0, 10.3, 17, 24.6, 35.2, 48.8, 69.1],
+      "breaks": [0, 10.3, 16, 23.2, 33.7, 47, 69.1],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1099,7 +1120,7 @@
       ],
       "property": "share_liberal_democrat_local",
       "palette": ["#F7F7F4", "#F7E6C8", "#F8D69C", "#F8C671", "#F9B645", "#FAA61A"],
-      "breaks": [0, 1.8, 6, 9.1, 12.3, 26.3, 70.3],
+      "breaks": [0, 5.7, 8.4, 11.7, 23.8, 70.3],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1132,7 +1153,7 @@
       ],
       "property": "share_green_local",
       "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
-      "breaks": [0, 3.6, 5.7, 8.5, 14, 51.6],
+      "breaks": [0, 3.7, 5.9, 9.1, 14.7, 51.6],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1819,11 +1840,11 @@
       "sourceIds": [
         "domestic-properties"
       ],
-      "property": "age_band_code",
-      "palette": ["#5b2a2a", "#7f3f32", "#a75e40", "#c77c53", "#dd9b6b", "#e9b885", "#f1cea1", "#d7cfc0"],
-      "breaks": [1, 2, 3, 4, 5, 6, 7, 8],
-      "format": "integer",
-      "minzoom": 11,
+      "property": "construction_year_midpoint",
+      "palette": ["#184e77", "#52b69a", "#d9ed92", "#f9c74f", "#f9844a", "#c1121f"],
+      "breaks": [1700, 1900, 1940, 1960, 1980, 2000, 2027],
+      "format": "year",
+      "minzoom": 12,
       "maxzoom": 17,
       "opacity": 0.9,
       "tooltip": [
@@ -1857,7 +1878,7 @@
       "label": "Underground lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -1896,7 +1917,7 @@
       "label": "Underground stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -1905,7 +1926,7 @@
       "palette": "#1f5f8b",
       "breaks": [],
       "format": "text",
-      "minzoom": 9,
+      "minzoom": 8,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#1f5f8b",
@@ -1934,7 +1955,7 @@
       "label": "DLR lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -1973,7 +1994,7 @@
       "label": "DLR stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -1982,7 +2003,7 @@
       "palette": "#00A4A7",
       "breaks": [],
       "format": "text",
-      "minzoom": 9,
+      "minzoom": 8,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#00A4A7",
@@ -2011,7 +2032,7 @@
       "label": "Trams lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -2050,7 +2071,7 @@
       "label": "Trams stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2059,7 +2080,7 @@
       "palette": "#84B817",
       "breaks": [],
       "format": "text",
-      "minzoom": 9,
+      "minzoom": 8,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#84B817",
@@ -2088,7 +2109,7 @@
       "label": "Overground lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -2127,7 +2148,7 @@
       "label": "Overground stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2136,7 +2157,7 @@
       "palette": "#EE7C0E",
       "breaks": [],
       "format": "text",
-      "minzoom": 9,
+      "minzoom": 8,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#EE7C0E",
@@ -2165,7 +2186,7 @@
       "label": "Elizabeth line lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -2204,7 +2225,7 @@
       "label": "Elizabeth line stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2213,7 +2234,7 @@
       "palette": "#6950A1",
       "breaks": [],
       "format": "text",
-      "minzoom": 9,
+      "minzoom": 8,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#6950A1",
@@ -2242,7 +2263,7 @@
       "label": "Buses lines",
       "description": "Dated static TfL route geometry; no live runtime dependency.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL network geometry",
       "sourceIds": [
         "transport"
@@ -5567,7 +5588,7 @@
       "label": "Buses stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -8891,7 +8912,7 @@
       "label": "Santander Cycle docks",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-08-31",
+      "referenceDate": "2026-09-04",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -8900,7 +8921,7 @@
       "palette": "#E31B6D",
       "breaks": [],
       "format": "text",
-      "minzoom": 9,
+      "minzoom": 8,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#E31B6D",
@@ -8929,78 +8950,78 @@
       "organisation": "Office for National Statistics",
       "url": "https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates/mid2022revisednov2025tomid2024/sapelsoasyoa20222024.xlsx",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "Census 2021 TS004, TS066 and TS067",
       "organisation": "Office for National Statistics via Nomis",
       "url": "https://www.nomisweb.co.uk/census/2021/bulk",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "Small area model-based income estimates, FYE 2023",
       "organisation": "Office for National Statistics",
       "url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/smallareaincomeestimatesformiddlelayersuperoutputareasenglandandwales/financialyearending2023/datasetfinal.xlsx",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "English Indices of Deprivation 2025",
       "organisation": "Ministry of Housing, Communities and Local Government",
       "url": "https://assets.publishing.service.gov.uk/media/691ded56d140bbbaa59a2a7d/File_7_IoD2025_All_Ranks_Scores_Deciles_Population_Denominators.csv",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "General election results 2024",
       "organisation": "UK Parliament",
       "url": "https://electionresults.parliament.uk/general-elections/6/countries/2/candidacies.csv",
       "licence": "Open Parliament Licence",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "Borough Council Election Results 2022",
       "organisation": "Greater London Authority",
       "url": "https://data.london.gov.uk/download/e16o8/26588a60-df3c-47cd-84e6-bd94f7a7d0c4/London%202022%20Wards.xlsx",
       "licence": "Open Government Licence v2.0",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "Mayor and London Assembly election results 2021",
       "organisation": "London Elects",
       "url": "https://www.londonelects.org.uk/files/2021%20London%20Elects%20-%20Ward%20Level%20Data%20Release.xlsx",
       "licence": "Open Government Licence",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "London Building Stock Model 2",
       "organisation": "Greater London Authority",
       "url": "https://data.london.gov.uk/dataset/london-building-stock-model-2-lbsm-2-2k55d",
       "licence": "Open Government Licence",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "OS OpenMap Local",
       "organisation": "Ordnance Survey",
       "url": "https://www.ordnancesurvey.co.uk/products/os-open-map-local",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "TfL Open Data",
       "organisation": "Transport for London",
       "url": "https://tfl.gov.uk/info-for/open-data-users/our-open-data",
       "licence": "TfL open-data terms",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     },
     {
       "title": "OpenStreetMap rail route relations",
       "organisation": "OpenStreetMap contributors",
       "url": "https://www.openstreetmap.org/copyright",
       "licence": "Open Data Commons Open Database License",
-      "retrieved": "2026-08-31"
+      "retrieved": "2026-09-04"
     }
   ],
-  "notes": ["LSOA21 is the standard small-area geography for population, foreign-born, education and work.", "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.", "Foreign citizenship and foreign-born change are deliberately excluded.", "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.", "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.", "City of London wards are No data in the 2022 borough-election layers because the City holds separate Common Council elections outside the GLA borough-results workbook.", "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."]
+  "notes": ["LSOA21 is the standard small-area geography for population, foreign-born, education and work.", "Resident dots are a dasymetric model: one dot represents 25 residents allocated to a building outline using domestic-property counts, not an exact person or household location. One unmatched LSOA uses its polygon as a documented fallback.", "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.", "Foreign citizenship and foreign-born change are deliberately excluded.", "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.", "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.", "City of London wards are No data in the 2022 borough-election layers because the City holds separate Common Council elections outside the GLA borough-results workbook.", "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."]
 }

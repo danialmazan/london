@@ -19,7 +19,15 @@ describe("London atlas generated data", () => {
     expect(manifest.defaultLayer).toBe("population-density");
     expect(manifest.layers.find(layer => layer.id === "population-density")?.palette).toEqual(["#440154", "#414487", "#2a788e", "#22a884", "#7ad151", "#fde725"]);
     expect(manifest.layers.find(layer => layer.id === "domestic-property-age")?.kind).toBe("fill");
+    expect(manifest.layers.find(layer => layer.id === "domestic-property-age")?.palette).toEqual(["#184e77", "#52b69a", "#d9ed92", "#f9c74f", "#f9844a", "#c1121f"]);
+    expect(manifest.layers.find(layer => layer.id === "population-total")?.kind).toBe("dot-density");
+    expect(manifest.layers.find(layer => layer.id === "population-total")?.dotValue).toBe(25);
     expect(manifest.layers.find(layer => layer.id === "general-labour")?.palette.at(-1)).toBe("#E4003B");
+  });
+  it("shows every rail and Santander stop layer from the same zoom", () => {
+    const stops = manifest.layers.filter(layer => layer.kind === "transport-stop" && layer.control?.transportMode !== "bus");
+    expect(stops.length).toBeGreaterThan(0);
+    expect(stops.every(layer => layer.minzoom === 8)).toBe(true);
   });
   it("publishes 4,994 mixed-geography LSOA reports", () => {
     expect(Object.keys(reports.sections)).toHaveLength(4994);
@@ -28,7 +36,7 @@ describe("London atlas generated data", () => {
     expect(Object.keys(report.elections)).toEqual(["general", "local", "mayor", "assembly"]);
     expect(report.metrics.foreign_born_pct?.geography).toBe("LSOA21");
     expect(report.metrics.income_bhc_gbp?.geography).toBe("MSOA21");
-    expect(report.metrics.population_density_km2?.distribution?.observationCount).toBe(4994);
+    expect(reports.distributions.population_density_km2?.observationCount).toBe(4994);
     expect(report.elections.general.areaName).toBeTruthy();
   });
   it("keeps the verified Brent 019D Census denominator transparent", () => {

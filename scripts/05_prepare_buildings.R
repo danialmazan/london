@@ -39,6 +39,8 @@ modal[, age_status := data.table::fifelse(construction_age_known_pct >= 99.999, 
 
 age_order <- c("pre-1900", "1900-1929", "1930-1949", "1950-1966", "1967-1982", "1983-1995", "1996-2011", "2012-onwards")
 modal[, age_band_code := match(construction_age_band, age_order)]
+age_midpoints <- c(1850, 1915, 1940, 1958, 1974.5, 1989, 2003.5, 2019)
+modal[, construction_year_midpoint := age_midpoints[age_band_code]]
 if (anyNA(modal$age_band_code)) stop("Unexpected LBSM2 construction age band")
 
 points <- st_as_sf(as.data.frame(modal), coords = c("easting", "northing"), crs = 27700)
@@ -68,9 +70,10 @@ building_totals <- assignment[, .(
 building_summary <- building_totals[building_modal, on = "building_index"]
 building_summary[, construction_age_known_pct := 100 * direct_age_records / domestic_properties]
 building_summary[, age_status := data.table::fifelse(construction_age_known_pct >= 99.999, "direct", data.table::fifelse(construction_age_known_pct <= 0.001, "modelled", "mixed"))]
+building_summary[, construction_year_midpoint := age_midpoints[age_band_code]]
 
 outlines <- buildings[building_summary$building_index, ]
-outlines <- bind_cols(outlines, as.data.frame(building_summary[, .(construction_age_band, age_band_code, domestic_properties, construction_age_known_pct, age_status, administrative_area, lsoa21cd)])) |>
+outlines <- bind_cols(outlines, as.data.frame(building_summary[, .(construction_age_band, construction_year_midpoint, domestic_properties, construction_age_known_pct, age_status, administrative_area, lsoa21cd)])) |>
   st_transform(4326)
 destination <- file.path(processed_dir, "domestic-properties.geojsonseq")
 if (file.exists(destination)) file.remove(destination)

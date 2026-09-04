@@ -1,0 +1,10 @@
+{
+  "dotValue": 25,
+  "randomSeed": 20240904,
+  "dotCount": 363598,
+  "lsoaCount": 4994,
+  "representedPopulation": 9089950,
+  "sourcePopulation": 9089736,
+  "allocation": "LSOA totals allocated to OS OpenMap Local outlines in proportion to LBSM2 domestic-property counts",
+  "lsoaPolygonFallbackCount": 1
+}

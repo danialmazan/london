@@ -3,7 +3,7 @@
   "layer": "building-height",
   "reason": "No verified redistributable London-wide height dataset is currently included.",
   "decision": "Keep genuine gaps as No data until an open derivation is completed and validated.",
-  "checkedAt": "2026-08-31",
+  "checkedAt": "2026-09-04",
   "candidateSources": [
     "https://www.emu-analytics.com/post/data-packs-from-emu-analytics",
     "https://dsp.environment.data.gov.uk/dataset/9ba4d5ac-d596-445a-9056-dae3ddec0178",
