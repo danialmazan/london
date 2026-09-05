@@ -9,7 +9,7 @@ const groups = {
 };
 
 export function renderThemeSectionCard(section: SectionReport, definition: LayerDefinition): string {
-  const header = (title = section.name, context = `${section.district} · LSOA21 ${section.id}`) => `<div class="feature-header"><h3>${esc(title)}</h3><p>${esc(context)}</p></div>`;
+  const header = (title = section.name, context = `${section.district} · LSOA21 ${section.id}`) => `<div class="feature-header feature-header--area"><div class="feature-header-copy"><h3>${esc(title)}</h3><p>${esc(context)}</p></div><button class="clear-area-button" type="button" aria-label="Clear selected area"><svg class="close-icon" viewBox="0 0 16 16" aria-hidden="true"><use href="#icon-close" /></svg></button></div>`;
   if (definition.group === "elections") {
     const key = definition.control?.election ?? "general";
     const item = section.elections[key];

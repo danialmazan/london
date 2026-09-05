@@ -10,6 +10,7 @@ import { LONDON_CAMERA, parseHash, serializeState } from "./state";
 import { renderLondonElectionCard, renderSectionReport, renderThemeSectionCard } from "./report";
 import { bindDistributionCharts } from "./report-interaction";
 import { renderFeatureActions } from "./feature-actions";
+import { isAreaSelectionLayer, resolveMapClickTarget, shouldQueryAreaHitLayer } from "./map-selection";
 import { shareOrCopy } from "./share";
 import type {
   AddressIndex,
@@ -841,7 +842,7 @@ function clearSelectedSection(updateHash = true): void {
 }
 
 function isCensusSectionLayer(layer: LayerDefinition): boolean {
-  return layer.group === "population" || layer.group === "education-work" || layer.group === "income" || layer.group === "elections";
+  return isAreaSelectionLayer(layer);
 }
 
 function renderTransportControls(): void {
@@ -1052,7 +1053,7 @@ async function renderFeaturePanelForState(): Promise<void> {
 }
 
 async function renderSelectedSection(sectionId: string): Promise<void> {
-  featurePanel.innerHTML = '<p class="feature-empty">Loading section details…</p>';
+  featurePanel.innerHTML = '<p class="feature-empty">Loading area details…</p>';
   try {
     const index = await loadSectionReports();
     const report = index.sections[sectionId];
@@ -1060,7 +1061,7 @@ async function renderSelectedSection(sectionId: string): Promise<void> {
       clearSelectedSection(false);
       renderEmptyFeaturePanel();
       scheduleHashUpdate(true);
-      showToast("That census section is not available");
+      showToast("That area is not available");
       return;
     }
     const definition = getSelectedLayer();
@@ -1072,7 +1073,7 @@ async function renderSelectedSection(sectionId: string): Promise<void> {
     revealFeatureActions();
   } catch (error) {
     console.warn("Section report index could not be loaded", error);
-    featurePanel.innerHTML = '<p class="feature-empty">Section details are temporarily unavailable.</p>';
+    featurePanel.innerHTML = '<p class="feature-empty">Area details are temporarily unavailable.</p>';
   }
 }
 
@@ -1087,19 +1088,19 @@ async function openSelectedSectionReport(updateState = true): Promise<void> {
   if (!sectionId) return;
   reportChartCleanup?.();
   reportChartCleanup = undefined;
-  reportContent.innerHTML = '<p class="report-loading">Preparing the census-section report…</p>';
+  reportContent.innerHTML = '<p class="report-loading">Preparing the small-area report…</p>';
   if (!reportDialog.open) reportDialog.showModal();
   try {
     const index = await loadSectionReports();
     const report = index.sections[sectionId];
-    if (!report) throw new Error(`Unknown report section ${sectionId}`);
+    if (!report) throw new Error(`Unknown report area ${sectionId}`);
     reportDialogTitle.textContent = report.name;
     reportContent.innerHTML = renderSectionReport(index, report);
     reportChartCleanup = bindDistributionCharts(reportContent, index);
     atlasState.reportOpen = true;
     if (updateState) scheduleHashUpdate(true);
   } catch (error) {
-    console.warn("Census-section report could not be rendered", error);
+    console.warn("Small-area report could not be rendered", error);
     reportContent.innerHTML = '<p class="report-loading">This report is temporarily unavailable.</p>';
   }
 }
@@ -1107,7 +1108,7 @@ async function openSelectedSectionReport(updateState = true): Promise<void> {
 function prepareReportPrintTitle(): void {
   if (!reportDialog.open) return;
   titleBeforePrint ??= document.title;
-  const reportName = reportDialogTitle.textContent?.trim() || "Census-section report";
+  const reportName = reportDialogTitle.textContent?.trim() || "Area report";
   document.title = `${reportName} · London Atlas · danielalmazan.com`;
 }
 
@@ -1131,60 +1132,62 @@ function bindSectionCardActions(): void {
     clearSelectedSection();
     void renderLondonElectionPanel();
   });
+  featurePanel.querySelector<HTMLButtonElement>(".clear-area-button")?.addEventListener("click", () => {
+    clearSelectedSection();
+    renderEmptyFeaturePanel();
+    setMobilePanel(true, "layers");
+    mobileLayersButton.focus();
+  });
 }
 
 function handleMapClick(event: MapMouseEvent): void {
+  const selectedLayer = getSelectedLayer();
   const features = map
     .queryRenderedFeatures(event.point)
     .filter((feature) => activeMapLayerIds.includes(feature.layer.id));
-  const selectedLayerPrefix = `atlas-${getSelectedLayer().id}-`;
+  const selectedLayerPrefix = `atlas-${selectedLayer.id}-`;
   const feature = features.find((candidate) => candidate.layer.id.startsWith(selectedLayerPrefix)) ?? features[0];
-  if (!feature) {
+  const target = resolveMapClickTarget(selectedLayer, queryCanonicalAreaId(event), feature);
+
+  if (target.kind === "area") {
+    selectCanonicalSection(target.areaId);
+    return;
+  }
+  if (target.kind === "empty") {
     clearSelectedSection();
     void renderFeaturePanelForState();
     return;
   }
-  const definition = manifest.layers.find((candidate) =>
-    feature.layer.id.startsWith(`atlas-${candidate.id}-`),
-  );
-  if (definition?.group === "elections" && selectCanonicalSectionAtPoint(event)) return;
-  if (definition && isCensusSectionLayer(definition)) {
-    const canonical = map.queryRenderedFeatures(event.point, { layers: [SECTION_HIT_LAYER] })[0];
-    const sectionId = canonical?.properties?.section_id;
-    if (typeof sectionId === "string" && /^E010\d{5}$/.test(sectionId)) {
-      atlasState.selectedSection = sectionId;
-      atlasState.reportOpen = false;
-      if (map.getLayer(SECTION_OUTLINE_LAYER)) map.removeLayer(SECTION_OUTLINE_LAYER);
-      addSelectedSectionOutline();
-      scheduleHashUpdate();
-      void renderSelectedSection(sectionId);
-      return;
-    }
-  }
   clearSelectedSection(false);
-  renderFeature(feature);
+  renderFeature(target.feature);
   scheduleHashUpdate();
 }
 
-function selectCanonicalSectionAtPoint(event: MapMouseEvent): boolean {
-  const canonical = map.queryRenderedFeatures(event.point, { layers: [SECTION_HIT_LAYER] })[0];
-  const sectionId = canonical?.properties?.section_id;
-  if (typeof sectionId !== "string" || !/^E010\d{5}$/.test(sectionId)) return false;
+function selectCanonicalSection(sectionId: string): void {
   atlasState.selectedSection = sectionId;
   atlasState.reportOpen = false;
   if (map.getLayer(SECTION_OUTLINE_LAYER)) map.removeLayer(SECTION_OUTLINE_LAYER);
   addSelectedSectionOutline();
   scheduleHashUpdate();
   void renderSelectedSection(sectionId);
-  return true;
+}
+
+function queryCanonicalAreaId(event: MapMouseEvent): unknown {
+  if (
+    !shouldQueryAreaHitLayer(atlasState.group, getSelectedLayer(), atlasState.dataLayerVisible) ||
+    !map.getLayer(SECTION_HIT_LAYER)
+  ) return undefined;
+  return map.queryRenderedFeatures(event.point, { layers: [SECTION_HIT_LAYER] })[0]?.properties?.section_id;
 }
 
 function handleMapHover(event: MapMouseEvent): void {
   if (!map) return;
+  const selectedLayer = getSelectedLayer();
   const features = map
     .queryRenderedFeatures(event.point)
     .filter((feature) => activeMapLayerIds.includes(feature.layer.id));
-  map.getCanvas().style.cursor = features.length > 0 ? "pointer" : "";
+  const target = resolveMapClickTarget(selectedLayer, queryCanonicalAreaId(event), features[0]);
+  map.getCanvas().style.cursor = target.kind === "empty" ? "" : "pointer";
 }
 
 function renderFeature(feature: MapGeoJSONFeature): void {
@@ -1205,7 +1208,7 @@ function renderFeature(feature: MapGeoJSONFeature): void {
       properties.stop_name ||
       properties.route_long_name ||
       properties.section_name ||
-      `Census section ${properties.section_id || "—"}`;
+      `Area ${properties.section_id || "—"}`;
   const context = isBuilding
     ? [properties.district, buildingId ? `ID ${buildingId}` : definition.geography]
         .filter(Boolean)
@@ -1293,7 +1296,7 @@ function renderIncomeSuppressionNote(
   const affected = district === "Carabanchel" || district === "Fuencarral-El Pardo";
   const missing = properties.below_60_median_pct == null && properties.above_200_median_pct == null;
   if (!affected || !missing) return "";
-  return `<aside class="feature-data-note"><strong>Official source suppression</strong><p>INE publishes no section values for the below-60% or above-200% median indicators in ${escapeHtml(district)}. The other income measures remain available.</p></aside>`;
+  return `<aside class="feature-data-note"><strong>Official source suppression</strong><p>INE publishes no area values for the below-60% or above-200% median indicators in ${escapeHtml(district)}. The other income measures remain available.</p></aside>`;
 }
 
 function renderElectionResultFeature(
@@ -1385,10 +1388,10 @@ function resetView(): void {
 function openShareDialog(): void {
   scheduleHashUpdate(true);
   const hasSection = atlasState.selectedSection !== null;
-  shareDialogTitle.textContent = hasSection ? "Share this census section" : "Share this map view";
-  shareViewAction.querySelector("strong")!.textContent = hasSection ? "Share section + layer" : "Share map view";
+  shareDialogTitle.textContent = hasSection ? "Share this area" : "Share this map view";
+  shareViewAction.querySelector("strong")!.textContent = hasSection ? "Share area + layer" : "Share map view";
   shareViewAction.querySelector("small")!.textContent = hasSection
-    ? "Reopens this section on the active layer"
+    ? "Reopens this area on the active layer"
     : "Includes the active layer and map position";
   shareReportAction.hidden = !hasSection;
   shareDialog.showModal();
@@ -1407,7 +1410,7 @@ async function shareCurrentView(): Promise<void> {
       },
     );
     if (outcome === "copied") {
-      showToast(atlasState.selectedSection ? "Section + layer link copied" : "View link copied");
+      showToast(atlasState.selectedSection ? "Area + layer link copied" : "View link copied");
     }
     if (outcome !== "aborted") shareDialog.close();
   } catch {
@@ -1627,7 +1630,7 @@ function setMobilePanel(open: boolean, view: MobilePanelView): void {
   mobileSheetTitle.textContent = {
     layers: "Choose map layers",
     legend: "Map legend",
-    details: atlasState.selectedSection ? "Section details" : "Map details",
+    details: atlasState.selectedSection ? "Area details" : "Map details",
     info: "Map information",
   }[view];
   setSheetOpen(open);

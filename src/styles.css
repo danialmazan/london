@@ -58,6 +58,18 @@
   vector-effect: non-scaling-stroke;
 }
 
+.panel-chevron {
+  display: block;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+  vector-effect: non-scaling-stroke;
+}
+
 html,
 body,
 #app {
@@ -482,6 +494,14 @@ select:focus-visible,
 
 .feature-header {
   margin-bottom: 8px;
+}
+
+.feature-header-copy {
+  min-width: 0;
+}
+
+.clear-area-button {
+  display: none;
 }
 
 .feature-header h3 {
@@ -1743,7 +1763,8 @@ select:focus-visible,
 }
 
 .close-button::after,
-.sheet-close::after {
+.sheet-collapse::after,
+.clear-area-button::after {
   position: absolute;
   inset: -5px;
   content: "";
@@ -1909,7 +1930,8 @@ select:focus-visible,
     white-space: nowrap;
   }
 
-  .sheet-close {
+  .sheet-collapse,
+  .clear-area-button {
     position: relative;
     display: grid;
     width: 32px;
@@ -1924,9 +1946,21 @@ select:focus-visible,
     cursor: pointer;
   }
 
-  .sheet-close .close-icon {
+  .feature-header--area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .sheet-collapse .panel-chevron,
+  .clear-area-button .close-icon {
     width: 13px;
     height: 13px;
+  }
+
+  .clear-area-button {
+    color: var(--ink);
   }
 
   .panel-scroll {

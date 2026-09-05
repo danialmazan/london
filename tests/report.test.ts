@@ -8,12 +8,14 @@ const manifest = read<LayerManifest>("public/data/layer-manifest.json");
 const reports = read<SectionReportIndex>("public/data/section-reports.json");
 const section = reports.sections.E01004731!;
 
-describe("section cards", () => {
+describe("area cards", () => {
   it("shows the complete population theme without the red foreign-born disclaimer", () => {
     const definition = manifest.layers.find(layer => layer.id === "foreign-born")!;
     const html = renderThemeSectionCard(section, definition);
     expect(html).toContain("Resident population");
     expect(html).toContain("Foreign-born residents");
+    expect(html).toContain('class="clear-area-button"');
+    expect(html).toContain('aria-label="Clear selected area"');
     expect(html).not.toContain("feature-data-note");
   });
 
