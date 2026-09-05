@@ -85,6 +85,5 @@ places <- st_transform(boroughs, 4326) |>
   ungroup() |>
   transmute(id, name = district, kind = "district", district, bbox)
 write_json(places, file.path(public_data_dir, "places.json"), pretty = TRUE, auto_unbox = TRUE)
-write_json(list(referenceDate = NA_character_, records = list()), file.path(public_data_dir, "addresses.json"), pretty = TRUE, auto_unbox = TRUE, na = "null")
 
 message("Prepared ", nrow(lsoa), " LSOAs, ", nrow(msoa), " MSOAs, ", nrow(ward22), " 2022 wards, ", nrow(ward21), " 2021 wards, and ", nrow(constituency), " constituencies.")

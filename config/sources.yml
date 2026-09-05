@@ -17,6 +17,8 @@ gla_lbsm2_page: "https://data.london.gov.uk/dataset/london-building-stock-model-
 emu_height_page: "https://www.emu-analytics.com/post/data-packs-from-emu-analytics"
 environment_agency_dsm_page: "https://dsp.environment.data.gov.uk/dataset/9ba4d5ac-d596-445a-9056-dae3ddec0178"
 os_openmap_local_page: "https://www.ordnancesurvey.co.uk/products/os-open-map-local"
+os_open_names_page: "https://www.ordnancesurvey.co.uk/products/os-open-names"
+os_open_names_downloads_api: "https://api.os.uk/downloads/v1/products/OpenNames/downloads?area=GB&format=CSV"
 tfl_open_data_page: "https://tfl.gov.uk/info-for/open-data-users/our-open-data"
 tfl_api_base: "https://api.tfl.gov.uk"
 tfl_bus_routes_features: "https://services1.arcgis.com/YswvgzOodUvqkoCN/arcgis/rest/services/Bus_Routes/FeatureServer/0"

@@ -423,14 +423,12 @@ select:focus-visible,
 }
 
 .legend-note {
-  display: -webkit-box;
+  display: block;
   margin: 5px 0 0;
-  overflow: hidden;
+  overflow: visible;
   color: var(--muted);
   font-size: 0.66rem;
   line-height: 1.35;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .legend-dot-key {

@@ -2,35 +2,59 @@ source("scripts/R/common.R")
 
 party_key <- function(value) {
   text <- tolower(trimws(value))
-  case_when(
+  known <- case_when(
     grepl("labour", text) ~ "labour",
     grepl("conservative", text) ~ "conservative",
     grepl("liberal democrat", text) ~ "liberal_democrat",
     grepl("green", text) ~ "green",
     grepl("reform", text) ~ "reform",
     grepl("independent", text) ~ "independent",
-    TRUE ~ "other"
+    TRUE ~ NA_character_
   )
+  slug <- iconv(text, to = "ASCII//TRANSLIT")
+  slug <- gsub("[^a-z0-9]+", "_", slug)
+  slug <- gsub("^_+|_+$", "", slug)
+  ifelse(is.na(known), slug, known)
 }
 
-party_label <- function(key) recode(key,
-  labour = "Labour", conservative = "Conservative", liberal_democrat = "Liberal Democrats",
-  green = "Green", reform = "Reform UK", independent = "Independent", other = "Other"
+party_label <- function(value, key = party_key(value)) ifelse(
+  key %in% c("labour", "conservative", "liberal_democrat", "green", "reform", "independent"),
+  recode(key, labour = "Labour", conservative = "Conservative", liberal_democrat = "Liberal Democrats",
+         green = "Green", reform = "Reform UK", independent = "Independent"),
+  trimws(value)
 )
 
+party_colour <- function(key) {
+  colours <- c(
+    labour = "#E4003B", conservative = "#0087DC", liberal_democrat = "#FAA61A",
+    green = "#6AB023", reform = "#12B6CF", independent = "#5A5A5A",
+    aspire = "#7B2D8E", residents_association = "#708238",
+    chislehurst_matters = "#7048A8", workers_party_of_britain = "#8B1E3F",
+    social_democratic_party = "#E85D9E", uk_independence_party_ukip = "#70147A"
+  )
+  unname(ifelse(key %in% names(colours), colours[key], "#8A6F8F"))
+}
+
 summarise_election <- function(long, id_fields, valid_votes = NULL, turnout = NULL, prefix) {
-  grouped <- long |>
-    mutate(party = party_key(party), votes = as.numeric(votes)) |>
+  prepared <- long |>
+    mutate(
+      party_key = party_key(party), party_label = party_label(party, party_key),
+      contestant = ifelse(party_key == "independent", contestant, party_key),
+      votes = as.numeric(votes)
+    ) |>
     filter(!is.na(votes), votes >= 0) |>
-    group_by(across(all_of(id_fields)), party) |>
+    filter(!is.na(party_key), party_key != "")
+
+  contestants <- prepared |>
+    group_by(across(all_of(id_fields)), party_key, party_label, contestant) |>
     summarise(votes = sum(votes), .groups = "drop")
 
-  totals <- grouped |>
+  totals <- contestants |>
     group_by(across(all_of(id_fields))) |>
-    arrange(desc(votes), party, .by_group = TRUE) |>
+    arrange(desc(votes), party_key, contestant, .by_group = TRUE) |>
     summarise(
-      leader_key = first(party),
-      leader = party_label(first(party)),
+      leader_key = first(party_key),
+      leader = first(party_label),
       leader_votes = first(votes),
       runner_up_votes = nth(votes, 2, default = 0),
       derived_valid_votes = sum(votes),
@@ -48,12 +72,13 @@ summarise_election <- function(long, id_fields, valid_votes = NULL, turnout = NU
       lead_label = paste0(leader, " +", format(lead_votes, big.mark = ",", scientific = FALSE, trim = TRUE), " (", sprintf("%.1f", lead_percent), "%)")
     )
 
-  shares <- grouped |>
+  shares <- contestants |>
+    group_by(across(all_of(id_fields)), party_key) |>
+    summarise(votes = ifelse(first(party_key) == "independent", max(votes), sum(votes)), .groups = "drop") |>
     left_join(totals |> select(all_of(id_fields), valid_votes), by = id_fields) |>
     mutate(share = safe_percent(votes, valid_votes)) |>
-    filter(party %in% c("labour", "conservative", "liberal_democrat", "green", "reform")) |>
-    select(all_of(id_fields), party, share) |>
-    pivot_wider(names_from = party, values_from = share, names_prefix = paste0("share_"), values_fill = 0)
+    select(all_of(id_fields), party_key, share) |>
+    pivot_wider(names_from = party_key, values_from = share, names_prefix = paste0("share_"), values_fill = 0)
 
   output <- totals |>
     left_join(shares, by = id_fields) |>
@@ -64,11 +89,17 @@ summarise_election <- function(long, id_fields, valid_votes = NULL, turnout = NU
 
 normalise_key <- function(value) {
   value <- tolower(value)
-  value <- gsub("['’]", "", value)
+  value <- gsub("['’`]", "", value)
   value <- gsub("&", " and ", value, fixed = TRUE)
   value <- gsub("[^a-z0-9]+", " ", value)
   value <- trimws(value)
-  gsub(" +", " ", value)
+  value <- gsub(" +", " ", value)
+  recode(value,
+    "saint andrews" = "st andrews",
+    "de beauvior" = "de beauvoir",
+    "graveney merton" = "graveney",
+    "st katherines and wapping" = "st katharines and wapping"
+  )
 }
 
 # UK general election, 4 July 2024 — official UK Parliament candidate data.
@@ -81,6 +112,7 @@ general_long <- general_raw |>
     constituency_id = `Constituency geographic code`,
     constituency_name = `Constituency name`,
     party = ifelse(`Candidate is standing as independent`, "Independent", `Main party name`),
+    contestant = ifelse(`Candidate is standing as independent`, paste(`Candidate given name`, `Candidate family name`), ifelse(is.na(`Main party name`), "Unknown", `Main party name`)),
     votes = `Candidate vote count`
   )
 general_valid <- general_raw |>
@@ -99,7 +131,7 @@ borough_wide <- read_excel(borough_path, sheet = "Ward votes summary")
 borough_long <- borough_wide |>
   rename(ward_id = WD22CD, ward_name = `Ward name`, district = Borough) |>
   pivot_longer(-c(ward_id, ward_name, LAD11CD, district), names_to = "party", values_to = "votes") |>
-  mutate(votes = as.numeric(votes), ward_join = paste(normalise_key(district), normalise_key(ward_name), sep = "|"))
+  mutate(votes = as.numeric(votes), contestant = party, ward_join = paste(normalise_key(district), normalise_key(ward_name), sep = "|"))
 borough <- summarise_election(borough_long, "ward_join", prefix = "local")
 
 # Mayor and London-wide Assembly ballots, 6 May 2021 — official ward-level release.
@@ -120,8 +152,8 @@ data_2021 <- data_2021 |>
 candidate_columns <- 6:25
 mayor_long <- data_2021 |>
   select(ward_join, all_of(names(data_2021)[candidate_columns])) |>
-  pivot_longer(-ward_join, names_to = "party", values_to = "votes") |>
-  mutate(party = sub("^.* - ", "", party), votes = as.numeric(votes))
+  pivot_longer(-ward_join, names_to = "contestant", values_to = "votes") |>
+  mutate(party = sub("^.* - ", "", contestant), votes = as.numeric(votes))
 mayor_valid <- data_2021 |> transmute(ward_join, valid_votes = as.numeric(`Total Good`))
 mayor_turnout <- data_2021 |> transmute(ward_join, turnout_pct = safe_percent(as.numeric(`Total Mayor Ballots`), as.numeric(Electorate)))
 mayor <- summarise_election(mayor_long, "ward_join", mayor_valid, mayor_turnout, "mayor")
@@ -130,7 +162,7 @@ assembly_columns <- 59:76
 assembly_long <- data_2021 |>
   select(ward_join, all_of(names(data_2021)[assembly_columns])) |>
   pivot_longer(-ward_join, names_to = "party", values_to = "votes") |>
-  mutate(votes = as.numeric(votes))
+  mutate(contestant = party, votes = as.numeric(votes))
 assembly_valid <- data_2021 |> transmute(ward_join, valid_votes = as.numeric(`Total Good.2`))
 assembly_turnout <- data_2021 |> transmute(ward_join, turnout_pct = safe_percent(as.numeric(`Total Assembly Ballots`), as.numeric(Electorate)))
 assembly <- summarise_election(assembly_long, "ward_join", assembly_valid, assembly_turnout, "assembly")
@@ -153,6 +185,17 @@ for (borough_name in c("Barking and Dagenham", "Greenwich", "Lambeth")) {
   if (!any(borough_rows) || any(is.na(wards22$leader_local[borough_rows]))) stop("Incomplete 2022 election coverage for ", borough_name)
 }
 message("2021 ward match coverage: mayor ", round(100 * mean(!is.na(wards21$leader_mayor)), 1), "%; Assembly ", round(100 * mean(!is.na(wards21$leader_assembly)), 1), "%")
+
+unmatched_2021 <- wards21 |> st_drop_geometry() |> filter(is.na(leader_mayor) | is.na(leader_assembly))
+if (any(unmatched_2021$district != "City of London")) stop("Unexpected non-City 2021 ward election mismatches: ", paste(unmatched_2021$ward_name[unmatched_2021$district != "City of London"], collapse = ", "))
+
+party_catalogue <- bind_rows(general_long, borough_long, mayor_long, assembly_long) |>
+  transmute(key = party_key(party), label = party_label(party, key), color = party_colour(key)) |>
+  filter(!is.na(key), key != "") |>
+  group_by(key) |>
+  summarise(label = first(label), color = first(color), .groups = "drop") |>
+  arrange(match(key, c("labour", "conservative", "liberal_democrat", "green", "reform", "independent")), key)
+write_json(party_catalogue, file.path(processed_dir, "election-parties.json"), pretty = TRUE, auto_unbox = TRUE)
 
 write_geojson(constituencies, "elections-general-2024.geojson")
 write_geojson(wards22, "elections-local-2022.geojson")

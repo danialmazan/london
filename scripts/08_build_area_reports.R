@@ -20,9 +20,9 @@ join_one <- function(polygons, fields) {
 }
 
 msoa_join <- join_one(msoa, c("msoa_id", "msoa_name", "income_bhc_gbp", "income_bhc_lower_gbp", "income_bhc_upper_gbp", "income_bhc_gbp_percentile", "income_ahc_gbp", "income_ahc_lower_gbp", "income_ahc_upper_gbp", "income_ahc_gbp_percentile"))
-ward22_join <- join_one(ward22, names(ward22)[grepl("^(ward_|district$|leader_|lead_|turnout_|share_)", names(ward22))])
-ward21_join <- join_one(ward21, names(ward21)[grepl("^(ward_|district$|leader_|lead_|turnout_|share_)", names(ward21))])
-constituency_join <- join_one(constituency, names(constituency)[grepl("^(constituency_|district$|leader_|lead_|turnout_|share_)", names(constituency))])
+ward22_join <- join_one(ward22, names(ward22)[grepl("^(ward_|district$|leader_|lead_|turnout_|valid_votes_|share_)", names(ward22))])
+ward21_join <- join_one(ward21, names(ward21)[grepl("^(ward_|district$|leader_|lead_|turnout_|valid_votes_|share_)", names(ward21))])
+constituency_join <- join_one(constituency, names(constituency)[grepl("^(constituency_|district$|leader_|lead_|turnout_|valid_votes_|share_)", names(constituency))])
 
 combined <- lsoa |>
   st_drop_geometry() |>
@@ -38,9 +38,9 @@ metric_metadata <- list(
   age65plus_pct = c("Residents aged 65+", "percent", "%", "LSOA21", "2024-06-30"),
   population_change_5y_pct = c("Five-year population change", "percent", "%", "LSOA21", "2019–2024"),
   foreign_born_pct = c("Foreign-born residents", "percent", "%", "LSOA21", "2021-03-21"),
-  activity_rate_pct = c("Economic activity", "percent", "%", "LSOA21", "2021-03-21"),
-  employment_rate_pct = c("Employment", "percent", "%", "LSOA21", "2021-03-21"),
-  unemployment_rate_pct = c("Unemployment", "percent", "%", "LSOA21", "2021-03-21"),
+  activity_rate_pct = c("Activity rate", "percent", "%", "LSOA21", "2021-03-21"),
+  employment_rate_pct = c("Employment rate", "percent", "%", "LSOA21", "2021-03-21"),
+  unemployment_rate_pct = c("Unemployment rate", "percent", "%", "LSOA21", "2021-03-21"),
   level4plus_pct = c("Level 4+ qualifications", "percent", "%", "LSOA21", "2021-03-21"),
   low_no_qualifications_pct = c("Low or no qualifications", "percent", "%", "LSOA21", "2021-03-21"),
   income_bhc_gbp = c("Disposable income before housing costs", "currency", "£/year", "MSOA21", "FYE 2023"),
@@ -81,16 +81,28 @@ metric_item <- function(row, field, metadata) {
   )
 }
 
+party_catalogue <- fromJSON(file.path(processed_dir, "election-parties.json"))
+
 election_item <- function(row, key, geography, area_id, area_name) {
   get_value <- function(prefix) {
     field <- paste0(prefix, "_", key)
     if (!field %in% names(row) || is.na(row[[field]])) NULL else unname(row[[field]])
   }
+  share_fields <- grep(paste0("^share_.*_", key, "$"), names(row), value = TRUE)
+  share_keys <- sub(paste0("_", key, "$"), "", sub("^share_", "", share_fields))
+  share_values <- vapply(share_fields, function(field) as.numeric(row[[field]][[1]]), numeric(1))
+  keep_shares <- is.finite(share_values) & share_values > 0
+  share_fields <- share_fields[keep_shares]
+  share_keys <- share_keys[keep_shares]
+  share_values <- share_values[keep_shares]
+  catalogue_rows <- party_catalogue[match(share_keys, party_catalogue$key), , drop = FALSE]
   list(
     leader = get_value("leader"), leadVotes = get_value("lead_votes"), leadPercent = get_value("lead_percent"),
     leadLabel = get_value("lead_label"), turnoutPct = get_value("turnout_pct"), validVotes = get_value("valid_votes"),
     geography = geography, areaId = if (is.na(area_id)) NULL else unname(area_id), areaName = if (is.na(area_name)) NULL else unname(area_name),
-    shares = setNames(lapply(c("labour", "conservative", "liberal_democrat", "green", "reform"), function(party) get_value(paste0("share_", party))), c("labour", "conservative", "liberal_democrat", "green", "reform"))
+    shares = setNames(as.list(share_values), share_keys),
+    shareLabels = setNames(as.list(catalogue_rows$label), share_keys),
+    shareColours = setNames(as.list(catalogue_rows$color), share_keys)
   )
 }
 

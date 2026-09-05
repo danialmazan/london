@@ -542,15 +542,30 @@ function addDefinitionToMap(definition: LayerDefinition, overlay: boolean): void
     } else if (definition.kind === "transport-stop") {
       const filter = routeFilter(definition);
       const isSantander = definition.control?.transportMode === "santander";
+      const stopColour: string | ExpressionSpecification = ["coalesce", ["get", "route_color"], definition.lineColor || "#161613"];
+      map.addLayer(
+        {
+          ...common,
+          id: `${id}-halo`,
+          type: "circle",
+          paint: {
+            "circle-radius": ["interpolate", ["linear"], ["zoom"], 7, isSantander ? 4.2 : 3.7, 15, isSantander ? 8.2 : 7.5],
+            "circle-color": "#ffffff",
+            "circle-opacity": 0.96,
+          },
+          ...(filter ? { filter } : {}),
+        },
+        beforeId,
+      );
+      activeMapLayerIds.push(`${id}-halo`);
       map.addLayer(
         {
           ...common,
           type: "circle",
           paint: {
-            "circle-radius": ["interpolate", ["linear"], ["zoom"], 9, isSantander ? 3.2 : 2.4, 15, isSantander ? 6.2 : 5.5],
-            "circle-color": isSantander ? ["coalesce", ["get", "route_color"], "#E31B6D"] : "#ffffff",
-            "circle-stroke-color": isSantander ? "#ffffff" : ["coalesce", ["get", "route_color"], definition.lineColor || "#161613"],
-            "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 9, 1.4, 15, 2.2],
+            "circle-radius": ["interpolate", ["linear"], ["zoom"], 7, isSantander ? 2.7 : 2.2, 15, isSantander ? 5.8 : 5.2],
+            "circle-color": isSantander ? "#E31B6D" : stopColour,
+            "circle-stroke-width": 0,
             "circle-opacity": definition.opacity ?? 0.96,
           },
           ...(filter ? { filter } : {}),
@@ -1439,6 +1454,13 @@ async function renderSearchResultsAsync(): Promise<void> {
         addressMatches.push({ record: addresses[index]!, index });
       }
     }
+    if (addressMatches.length === 0) {
+      for (let index = 0; index < addressSearchText.length && addressMatches.length < 8; index += 1) {
+        if (fuzzySearchMatch(addressSearchText[index] ?? "", query)) {
+          addressMatches.push({ record: addresses[index]!, index });
+        }
+      }
+    }
   }
 
   const shownAddresses = addressMatches.slice(0, Math.max(0, 8 - placeMatches.length));
@@ -1503,6 +1525,30 @@ function normaliseSearchText(value: string): string {
     .toLocaleLowerCase("es")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function fuzzySearchMatch(candidate: string, query: string): boolean {
+  const candidateWords = candidate.split(" ").filter(Boolean);
+  return query.split(" ").filter(Boolean).every((queryWord) =>
+    candidateWords.some((candidateWord) =>
+      candidateWord.includes(queryWord) ||
+      (queryWord.length >= 5 && Math.abs(candidateWord.length - queryWord.length) <= 1 && editDistanceAtMostOne(candidateWord, queryWord)),
+    ),
+  );
+}
+
+function editDistanceAtMostOne(left: string, right: string): boolean {
+  if (left === right) return true;
+  if (Math.abs(left.length - right.length) > 1) return false;
+  if (left.length > right.length) return editDistanceAtMostOne(right, left);
+  let differences = 0;
+  for (let i = 0, j = 0; i < left.length && j < right.length; i += 1, j += 1) {
+    if (left[i] === right[j]) continue;
+    differences += 1;
+    if (differences > 1) return false;
+    if (left.length < right.length) i -= 1;
+  }
+  return true;
 }
 
 function handleSearchKeys(event: KeyboardEvent): void {

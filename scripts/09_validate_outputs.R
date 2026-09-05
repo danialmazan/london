@@ -32,7 +32,7 @@ if (!identical(manifest$defaultLayer, "population-density")) stop("Population de
 density_layer <- manifest$layers[[match("population-density", layer_ids)]]
 if (!identical(unlist(density_layer$palette), c("#440154", "#414487", "#2a788e", "#22a884", "#7ad151", "#fde725"))) stop("Population density palette must match the Madrid viridis palette")
 building_layer <- manifest$layers[[match("domestic-property-age", layer_ids)]]
-if (!identical(building_layer$kind, "fill")) stop("Domestic construction age must render as building outlines")
+if (!identical(building_layer$kind, "fill")) stop("Domestic construction year must render as building outlines")
 if (!identical(unlist(building_layer$palette), c("#184e77", "#52b69a", "#d9ed92", "#f9c74f", "#f9844a", "#c1121f"))) stop("Building age palette must match Madrid")
 resident_layer <- manifest$layers[[match("population-total", layer_ids)]]
 if (!identical(resident_layer$kind, "dot-density") || resident_layer$dotValue != 25) stop("Resident population must use the 25-person dot layer")
@@ -52,7 +52,16 @@ if (file.exists(transport_path)) {
   if (!any(transport$mode == "tube" & transport$feature_type == "line", na.rm = TRUE)) stop("Actual rail line features are missing")
 }
 transport_stops <- Filter(function(item) identical(item$kind, "transport-stop") && item$control$transportMode != "bus", manifest$layers)
-if (any(vapply(transport_stops, function(item) item$minzoom != 8, logical(1)))) stop("All rail and Santander stops must appear from zoom 8")
+if (any(vapply(transport_stops, function(item) item$minzoom != 7, logical(1)))) stop("All rail and Santander stops must appear from zoom 7")
+
+addresses <- fromJSON(file.path(public_data_dir, "addresses.json"), simplifyVector = FALSE)
+if (length(addresses$records) < 50000 || !any(vapply(addresses$records, function(item) identical(item[[2]], "Yalding Road"), logical(1)))) stop("Official OS Open Names road-search index is incomplete")
+
+general <- st_read(file.path(processed_dir, "elections-general-2024.geojson"), quiet = TRUE)
+islington <- general[general$constituency_name == "Islington North", ]
+if (nrow(islington) != 1 || islington$leader_key_general != "independent" || abs(islington$share_independent_general - 49.218463) > 1e-5) stop("Islington North independent-candidate result regression")
+wards21 <- st_read(file.path(processed_dir, "elections-london-2021.geojson"), quiet = TRUE)
+if (any(is.na(wards21$leader_mayor[wards21$district != "City of London"]))) stop("Non-City 2021 ward gaps remain")
 
 archive_sizes <- setNames(file.info(file.path(public_data_dir, required[grepl("pmtiles$", required)]))$size, required[grepl("pmtiles$", required)])
 if (any(archive_sizes <= 0)) stop("One or more PMTiles archives are empty")

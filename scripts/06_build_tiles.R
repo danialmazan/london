@@ -25,11 +25,11 @@ build_archive("elections-local-2022.geojson", "elections-local-2022.pmtiles", "w
 build_archive("elections-london-2021.geojson", "elections-london-2021.pmtiles", "wards2021", 8, 14)
 
 if (file.exists(file.path(processed_dir, "resident-dots.geojsonseq"))) {
-  build_archive("resident-dots.geojsonseq", "resident-dots.pmtiles", "resident_dots", 8, 16)
+  build_archive("resident-dots.geojsonseq", "resident-dots.pmtiles", "resident_dots", 8, 16, "--drop-rate=1")
 }
 
 if (file.exists(file.path(processed_dir, "transport.geojson"))) {
-  build_archive("transport.geojson", "transport.pmtiles", "transport", 7, 16)
+  build_archive("transport.geojson", "transport.pmtiles", "transport", 7, 16, "--drop-rate=1")
 }
 if (file.exists(file.path(processed_dir, "domestic-properties.geojsonseq"))) {
   build_archive("domestic-properties.geojsonseq", "domestic-properties.pmtiles", "domestic_properties", 12, 15)

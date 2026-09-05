@@ -1,5 +1,5 @@
 {
-  "validatedAt": "2026-09-04 07:46:57Z",
+  "validatedAt": "2026-09-05 10:31:41Z",
   "status": "pass",
   "layerCount": 62,
   "reportCount": 4994,
@@ -21,9 +21,9 @@
   "archiveBytes": {
     "lsoa21.pmtiles": 17289307,
     "msoa21.pmtiles": 1779444,
-    "resident-dots.pmtiles": 19176210,
-    "elections-general-2024.pmtiles": 493626,
-    "elections-local-2022.pmtiles": 2098869,
-    "elections-london-2021.pmtiles": 3173591
+    "resident-dots.pmtiles": 75622656,
+    "elections-general-2024.pmtiles": 656825,
+    "elections-local-2022.pmtiles": 2690714,
+    "elections-london-2021.pmtiles": 5702992
   }
 }

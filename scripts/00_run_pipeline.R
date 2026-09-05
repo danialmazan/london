@@ -1,5 +1,6 @@
 steps <- c(
   "scripts/01_prepare_boundaries.R",
+  "scripts/01a_prepare_search.R",
   "scripts/02_prepare_population.R",
   "scripts/03_prepare_income.R",
   "scripts/04_prepare_elections.R",

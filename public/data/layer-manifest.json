@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04 07:46:30Z",
+  "generatedAt": "2026-09-05 10:23:13Z",
   "version": "1.0.0",
   "defaultLayer": "population-density",
   "sources": [
@@ -75,7 +75,7 @@
       "kind": "dot-density",
       "label": "Resident population",
       "shortLabel": "Residents",
-      "description": "One modelled dot represents 25 mid-2024 residents. Dots are allocated within OS building outlines using London Building Stock Model domestic-property counts; they are not exact resident or household locations. One LSOA without a matched domestic-property outline uses its LSOA polygon as a fallback.",
+      "description": "1 dot = 25 residents, modelled within residential building outlines.",
       "unit": "residents",
       "referenceDate": "2024-06-30",
       "geography": "LSOA21",
@@ -87,7 +87,7 @@
       "breaks": [947, 1498, 1631, 1757, 1900.9, 2128, 5317],
       "format": "integer",
       "minzoom": 8,
-      "maxzoom": 17,
+      "maxzoom": 20,
       "opacity": 0.78,
       "tooltip": [
         {
@@ -217,7 +217,7 @@
       ],
       "property": "population_change_5y_pct",
       "palette": ["#7d2948", "#c16b78", "#ead0cf", "#f3f1e7", "#bad8cf", "#5b9b8c", "#1f625c"],
-      "breaks": [-39.2, -4.9, -2.2, 0.2, 2.8, 7, 272.7],
+      "breaks": [-39.18448533, -8, -4, -1.5, 1.5, 4, 8, 272.72012579],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -238,7 +238,7 @@
       "kind": "choropleth",
       "label": "Foreign-born residents",
       "shortLabel": "Foreign-born",
-      "description": "Census 2021 residents born outside the United Kingdom as a share of all usual residents. No citizenship or change layer is included.",
+      "description": "Census 2021 residents born outside the United Kingdom as a share of all usual residents.",
       "unit": "%",
       "referenceDate": "2021-03-21",
       "geography": "LSOA21",
@@ -266,8 +266,8 @@
       "id": "economic-activity",
       "group": "education-work",
       "kind": "choropleth",
-      "label": "Economic activity",
-      "shortLabel": "Activity",
+      "label": "Activity rate",
+      "shortLabel": "Activity rate",
       "description": "Economically active residents aged 16+, including full-time students who were active.",
       "unit": "%",
       "referenceDate": "2021-03-21",
@@ -296,8 +296,8 @@
       "id": "employment",
       "group": "education-work",
       "kind": "choropleth",
-      "label": "Employment",
-      "shortLabel": "Employment",
+      "label": "Employment rate",
+      "shortLabel": "Employment rate",
       "description": "Residents aged 16+ in employment as a share of all residents aged 16+.",
       "unit": "%",
       "referenceDate": "2021-03-21",
@@ -326,8 +326,8 @@
       "id": "unemployment",
       "group": "education-work",
       "kind": "choropleth",
-      "label": "Unemployment",
-      "shortLabel": "Unemployment",
+      "label": "Unemployment rate",
+      "shortLabel": "Unemployment rate",
       "description": "Unemployed residents as a share of economically active residents aged 16+.",
       "unit": "%",
       "referenceDate": "2021-03-21",
@@ -357,7 +357,7 @@
       "group": "education-work",
       "kind": "choropleth",
       "label": "Level 4+ qualifications",
-      "shortLabel": "Level 4+",
+      "shortLabel": "Level 4+ qual.",
       "description": "Residents aged 16+ whose highest qualification is Level 4 or above.",
       "unit": "%",
       "referenceDate": "2021-03-21",
@@ -387,7 +387,7 @@
       "group": "education-work",
       "kind": "choropleth",
       "label": "Low or no qualifications",
-      "shortLabel": "Low / none",
+      "shortLabel": "Low/no qual.",
       "description": "Residents aged 16+ with no qualifications or Level 1/entry-level qualifications.",
       "unit": "%",
       "referenceDate": "2021-03-21",
@@ -596,7 +596,7 @@
         "elections-general-2024"
       ],
       "property": "leader_key_general",
-      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#5A5A5A", "animal_welfare_party", "#8A6F8F", "animal_welfare_party_people_animals_environment", "#8A6F8F", "aspire", "#7B2D8E", "britain_first_british_people_first", "#8A6F8F", "british_democrats", "#8A6F8F", "chislehurst_matters", "#7048A8", "christian_peoples_alliance", "#8A6F8F", "climate_party", "#8A6F8F", "communist_league_election_campaign", "#8A6F8F", "communist_party_of_britain", "#8A6F8F", "count_binface_for_mayor_of_london", "#8A6F8F", "english_constitution_party", "#8A6F8F", "english_constitution_party_bill_of_rights", "#8A6F8F", "freedom_alliance", "#8A6F8F", "heritage_party", "#8A6F8F", "heritage_party_free_speech_and_liberty", "#8A6F8F", "let_london_live", "#8A6F8F", "londependence", "#8A6F8F", "london_real_party", "#8A6F8F", "monster_raving_loony_party", "#8A6F8F", "national_health_action", "#8A6F8F", "national_liberal_party_self_determination_for_all", "#8A6F8F", "official_monster_raving_loony_party", "#8A6F8F", "party_of_women", "#8A6F8F", "rejoin_eu", "#8A6F8F", "renew", "#8A6F8F", "residents_association", "#708238", "resurrection_young_people_in_sha_allah", "#8A6F8F", "shared_ground", "#8A6F8F", "shared_ground_formerly_young_people_s_party", "#8A6F8F", "social_democratic_party", "#E85D9E", "socialist_equality_party", "#8A6F8F", "socialist_party_gb_world_socialist_movement", "#8A6F8F", "taking_the_initiative_party", "#8A6F8F", "the_burning_pink_party", "#8A6F8F", "the_liberal_party", "#8A6F8F", "the_mitre_tw9", "#8A6F8F", "the_reclaim_party", "#8A6F8F", "the_socialist_party_of_great_britain", "#8A6F8F", "the_yoruba_party_in_the_uk", "#8A6F8F", "trade_union_and_socialist_coalition", "#8A6F8F", "trade_union_and_socialist_party", "#8A6F8F", "trade_unionist_and_socialist_coalition", "#8A6F8F", "uk_independence_party", "#8A6F8F", "uk_independence_party_ukip", "#70147A", "ukip", "#8A6F8F", "vote_women_s_equality_party_on_orange", "#8A6F8F", "women_s_equality_party", "#8A6F8F", "workers_party_of_britain", "#8B1E3F", "workers_revolutionary_party", "#8A6F8F"],
       "breaks": [],
       "format": "text",
       "minzoom": 7,
@@ -625,9 +625,9 @@
         "party": "leading",
         "results": [
           {
-            "property": "share_labour_general",
-            "label": "Labour",
-            "color": "#E4003B"
+            "property": "share_christian_peoples_alliance_general",
+            "label": "Christian Peoples Alliance",
+            "color": "#8A6F8F"
           },
           {
             "property": "share_conservative_general",
@@ -635,19 +635,129 @@
             "color": "#0087DC"
           },
           {
-            "property": "share_liberal_democrat_general",
-            "label": "Liberal Democrats",
-            "color": "#FAA61A"
-          },
-          {
             "property": "share_green_general",
             "label": "Green",
             "color": "#6AB023"
           },
           {
+            "property": "share_independent_general",
+            "label": "Independent",
+            "color": "#5A5A5A"
+          },
+          {
+            "property": "share_labour_general",
+            "label": "Labour",
+            "color": "#E4003B"
+          },
+          {
+            "property": "share_liberal_democrat_general",
+            "label": "Liberal Democrats",
+            "color": "#FAA61A"
+          },
+          {
             "property": "share_reform_general",
             "label": "Reform UK",
             "color": "#12B6CF"
+          },
+          {
+            "property": "share_workers_party_of_britain_general",
+            "label": "Workers Party of Britain",
+            "color": "#8B1E3F"
+          },
+          {
+            "property": "share_rejoin_eu_general",
+            "label": "Rejoin EU",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_social_democratic_party_general",
+            "label": "Social Democratic Party",
+            "color": "#E85D9E"
+          },
+          {
+            "property": "share_animal_welfare_party_general",
+            "label": "Animal Welfare Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_climate_party_general",
+            "label": "Climate Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_heritage_party_general",
+            "label": "Heritage Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_the_socialist_party_of_great_britain_general",
+            "label": "The Socialist Party of Great Britain",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_taking_the_initiative_party_general",
+            "label": "Taking The Initiative Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_trade_unionist_and_socialist_coalition_general",
+            "label": "Trade Unionist and Socialist Coalition",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_party_of_women_general",
+            "label": "Party of Women",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_official_monster_raving_loony_party_general",
+            "label": "Official Monster Raving Loony Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_workers_revolutionary_party_general",
+            "label": "Workers Revolutionary Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_socialist_equality_party_general",
+            "label": "Socialist Equality Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_uk_independence_party_general",
+            "label": "UK Independence Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_shared_ground_general",
+            "label": "Shared Ground",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_communist_party_of_britain_general",
+            "label": "Communist Party of Britain",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_the_yoruba_party_in_the_uk_general",
+            "label": "The Yoruba Party in the UK",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_the_mitre_tw9_general",
+            "label": "The Mitre TW9",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_english_constitution_party_general",
+            "label": "English Constitution Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_communist_league_election_campaign_general",
+            "label": "Communist League Election Campaign",
+            "color": "#8A6F8F"
           }
         ]
       }
@@ -667,7 +777,7 @@
       ],
       "property": "lead_percent_general",
       "palette": ["#f4eff7", "#ddd0e7", "#bea9d1", "#987fb6", "#70558f", "#4c3569"],
-      "breaks": [0, 6.9, 17.6, 28.2, 33.4, 38.9, 44.5],
+      "breaks": [0, 6.9, 17.6, 29, 33.6, 38.9, 44.5],
       "format": "percent",
       "minzoom": 7,
       "maxzoom": 16,
@@ -907,7 +1017,7 @@
         "elections-local-2022"
       ],
       "property": "leader_key_local",
-      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#5A5A5A", "animal_welfare_party", "#8A6F8F", "animal_welfare_party_people_animals_environment", "#8A6F8F", "aspire", "#7B2D8E", "britain_first_british_people_first", "#8A6F8F", "british_democrats", "#8A6F8F", "chislehurst_matters", "#7048A8", "christian_peoples_alliance", "#8A6F8F", "climate_party", "#8A6F8F", "communist_league_election_campaign", "#8A6F8F", "communist_party_of_britain", "#8A6F8F", "count_binface_for_mayor_of_london", "#8A6F8F", "english_constitution_party", "#8A6F8F", "english_constitution_party_bill_of_rights", "#8A6F8F", "freedom_alliance", "#8A6F8F", "heritage_party", "#8A6F8F", "heritage_party_free_speech_and_liberty", "#8A6F8F", "let_london_live", "#8A6F8F", "londependence", "#8A6F8F", "london_real_party", "#8A6F8F", "monster_raving_loony_party", "#8A6F8F", "national_health_action", "#8A6F8F", "national_liberal_party_self_determination_for_all", "#8A6F8F", "official_monster_raving_loony_party", "#8A6F8F", "party_of_women", "#8A6F8F", "rejoin_eu", "#8A6F8F", "renew", "#8A6F8F", "residents_association", "#708238", "resurrection_young_people_in_sha_allah", "#8A6F8F", "shared_ground", "#8A6F8F", "shared_ground_formerly_young_people_s_party", "#8A6F8F", "social_democratic_party", "#E85D9E", "socialist_equality_party", "#8A6F8F", "socialist_party_gb_world_socialist_movement", "#8A6F8F", "taking_the_initiative_party", "#8A6F8F", "the_burning_pink_party", "#8A6F8F", "the_liberal_party", "#8A6F8F", "the_mitre_tw9", "#8A6F8F", "the_reclaim_party", "#8A6F8F", "the_socialist_party_of_great_britain", "#8A6F8F", "the_yoruba_party_in_the_uk", "#8A6F8F", "trade_union_and_socialist_coalition", "#8A6F8F", "trade_union_and_socialist_party", "#8A6F8F", "trade_unionist_and_socialist_coalition", "#8A6F8F", "uk_independence_party", "#8A6F8F", "uk_independence_party_ukip", "#70147A", "ukip", "#8A6F8F", "vote_women_s_equality_party_on_orange", "#8A6F8F", "women_s_equality_party", "#8A6F8F", "workers_party_of_britain", "#8B1E3F", "workers_revolutionary_party", "#8A6F8F"],
       "breaks": [],
       "format": "text",
       "minzoom": 8,
@@ -936,19 +1046,9 @@
         "party": "leading",
         "results": [
           {
-            "property": "share_labour_local",
-            "label": "Labour",
-            "color": "#E4003B"
-          },
-          {
             "property": "share_conservative_local",
             "label": "Conservative",
             "color": "#0087DC"
-          },
-          {
-            "property": "share_liberal_democrat_local",
-            "label": "Liberal Democrats",
-            "color": "#FAA61A"
           },
           {
             "property": "share_green_local",
@@ -956,9 +1056,149 @@
             "color": "#6AB023"
           },
           {
+            "property": "share_labour_local",
+            "label": "Labour",
+            "color": "#E4003B"
+          },
+          {
+            "property": "share_trade_union_and_socialist_party_local",
+            "label": "Trade Union and Socialist Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_independent_local",
+            "label": "Independent",
+            "color": "#5A5A5A"
+          },
+          {
+            "property": "share_liberal_democrat_local",
+            "label": "Liberal Democrats",
+            "color": "#FAA61A"
+          },
+          {
+            "property": "share_christian_peoples_alliance_local",
+            "label": "Christian Peoples Alliance",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_women_s_equality_party_local",
+            "label": "Women's Equality Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_rejoin_eu_local",
+            "label": "Rejoin EU",
+            "color": "#8A6F8F"
+          },
+          {
             "property": "share_reform_local",
             "label": "Reform UK",
             "color": "#12B6CF"
+          },
+          {
+            "property": "share_british_democrats_local",
+            "label": "British Democrats",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_social_democratic_party_local",
+            "label": "Social Democratic Party",
+            "color": "#E85D9E"
+          },
+          {
+            "property": "share_chislehurst_matters_local",
+            "label": "Chislehurst Matters",
+            "color": "#7048A8"
+          },
+          {
+            "property": "share_let_london_live_local",
+            "label": "Let London Live",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_workers_party_of_britain_local",
+            "label": "Workers Party of Britain",
+            "color": "#8B1E3F"
+          },
+          {
+            "property": "share_animal_welfare_party_local",
+            "label": "Animal Welfare Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_taking_the_initiative_party_local",
+            "label": "Taking The Initiative Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_heritage_party_local",
+            "label": "Heritage Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_uk_independence_party_ukip_local",
+            "label": "UK Independence Party (UKIP)",
+            "color": "#70147A"
+          },
+          {
+            "property": "share_freedom_alliance_local",
+            "label": "Freedom Alliance",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_communist_party_of_britain_local",
+            "label": "Communist Party of Britain",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_monster_raving_loony_party_local",
+            "label": "Monster Raving Loony Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_britain_first_british_people_first_local",
+            "label": "Britain First - British People First",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_residents_association_local",
+            "label": "Residents' Association",
+            "color": "#708238"
+          },
+          {
+            "property": "share_english_constitution_party_bill_of_rights_local",
+            "label": "English Constitution Party, Bill of Rights",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_national_health_action_local",
+            "label": "National Health Action",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_the_liberal_party_local",
+            "label": "The Liberal Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_socialist_party_gb_world_socialist_movement_local",
+            "label": "Socialist Party GB (World Socialist Movement)",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_shared_ground_formerly_young_people_s_party_local",
+            "label": "Shared Ground formerly Young People`s Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_aspire_local",
+            "label": "Aspire",
+            "color": "#7B2D8E"
+          },
+          {
+            "property": "share_resurrection_young_people_in_sha_allah_local",
+            "label": "Resurrection Young People. In Sha Allah",
+            "color": "#8A6F8F"
           }
         ]
       }
@@ -978,7 +1218,7 @@
       ],
       "property": "lead_percent_local",
       "palette": ["#f4eff7", "#ddd0e7", "#bea9d1", "#987fb6", "#70558f", "#4c3569"],
-      "breaks": [0, 8.8, 18.2, 30.2, 40.7, 50.3, 81.9],
+      "breaks": [0, 9, 18.2, 30.2, 40.7, 50.3, 81.9],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1218,7 +1458,7 @@
         "elections-london-2021"
       ],
       "property": "leader_key_mayor",
-      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#5A5A5A", "animal_welfare_party", "#8A6F8F", "animal_welfare_party_people_animals_environment", "#8A6F8F", "aspire", "#7B2D8E", "britain_first_british_people_first", "#8A6F8F", "british_democrats", "#8A6F8F", "chislehurst_matters", "#7048A8", "christian_peoples_alliance", "#8A6F8F", "climate_party", "#8A6F8F", "communist_league_election_campaign", "#8A6F8F", "communist_party_of_britain", "#8A6F8F", "count_binface_for_mayor_of_london", "#8A6F8F", "english_constitution_party", "#8A6F8F", "english_constitution_party_bill_of_rights", "#8A6F8F", "freedom_alliance", "#8A6F8F", "heritage_party", "#8A6F8F", "heritage_party_free_speech_and_liberty", "#8A6F8F", "let_london_live", "#8A6F8F", "londependence", "#8A6F8F", "london_real_party", "#8A6F8F", "monster_raving_loony_party", "#8A6F8F", "national_health_action", "#8A6F8F", "national_liberal_party_self_determination_for_all", "#8A6F8F", "official_monster_raving_loony_party", "#8A6F8F", "party_of_women", "#8A6F8F", "rejoin_eu", "#8A6F8F", "renew", "#8A6F8F", "residents_association", "#708238", "resurrection_young_people_in_sha_allah", "#8A6F8F", "shared_ground", "#8A6F8F", "shared_ground_formerly_young_people_s_party", "#8A6F8F", "social_democratic_party", "#E85D9E", "socialist_equality_party", "#8A6F8F", "socialist_party_gb_world_socialist_movement", "#8A6F8F", "taking_the_initiative_party", "#8A6F8F", "the_burning_pink_party", "#8A6F8F", "the_liberal_party", "#8A6F8F", "the_mitre_tw9", "#8A6F8F", "the_reclaim_party", "#8A6F8F", "the_socialist_party_of_great_britain", "#8A6F8F", "the_yoruba_party_in_the_uk", "#8A6F8F", "trade_union_and_socialist_coalition", "#8A6F8F", "trade_union_and_socialist_party", "#8A6F8F", "trade_unionist_and_socialist_coalition", "#8A6F8F", "uk_independence_party", "#8A6F8F", "uk_independence_party_ukip", "#70147A", "ukip", "#8A6F8F", "vote_women_s_equality_party_on_orange", "#8A6F8F", "women_s_equality_party", "#8A6F8F", "workers_party_of_britain", "#8B1E3F", "workers_revolutionary_party", "#8A6F8F"],
       "breaks": [],
       "format": "text",
       "minzoom": 8,
@@ -1247,9 +1487,9 @@
         "party": "leading",
         "results": [
           {
-            "property": "share_labour_mayor",
-            "label": "Labour",
-            "color": "#E4003B"
+            "property": "share_animal_welfare_party_people_animals_environment_mayor",
+            "label": "Animal Welfare Party-People, Animals, Environment",
+            "color": "#8A6F8F"
           },
           {
             "property": "share_conservative_mayor",
@@ -1257,9 +1497,9 @@
             "color": "#0087DC"
           },
           {
-            "property": "share_liberal_democrat_mayor",
-            "label": "Liberal Democrats",
-            "color": "#FAA61A"
+            "property": "share_count_binface_for_mayor_of_london_mayor",
+            "label": "Count Binface for Mayor of London",
+            "color": "#8A6F8F"
           },
           {
             "property": "share_green_mayor",
@@ -1267,9 +1507,69 @@
             "color": "#6AB023"
           },
           {
-            "property": "share_reform_mayor",
-            "label": "Reform UK",
-            "color": "#12B6CF"
+            "property": "share_heritage_party_mayor",
+            "label": "Heritage Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_independent_mayor",
+            "label": "Independent",
+            "color": "#5A5A5A"
+          },
+          {
+            "property": "share_labour_mayor",
+            "label": "Labour",
+            "color": "#E4003B"
+          },
+          {
+            "property": "share_let_london_live_mayor",
+            "label": "Let London Live",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_liberal_democrat_mayor",
+            "label": "Liberal Democrats",
+            "color": "#FAA61A"
+          },
+          {
+            "property": "share_london_real_party_mayor",
+            "label": "London Real Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_rejoin_eu_mayor",
+            "label": "Rejoin EU",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_renew_mayor",
+            "label": "Renew",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_social_democratic_party_mayor",
+            "label": "Social Democratic Party",
+            "color": "#E85D9E"
+          },
+          {
+            "property": "share_the_burning_pink_party_mayor",
+            "label": "The Burning Pink Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_the_reclaim_party_mayor",
+            "label": "The Reclaim Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_ukip_mayor",
+            "label": "UKIP",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_vote_women_s_equality_party_on_orange_mayor",
+            "label": "Vote Women's Equality Party on orange",
+            "color": "#8A6F8F"
           }
         ]
       }
@@ -1289,7 +1589,7 @@
       ],
       "property": "lead_percent_mayor",
       "palette": ["#f4eff7", "#ddd0e7", "#bea9d1", "#987fb6", "#70558f", "#4c3569"],
-      "breaks": [0, 6.9, 14.3, 21.7, 28.6, 37.9, 64.8],
+      "breaks": [0, 7, 14.4, 21.9, 28.7, 38.1, 64.8],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1365,7 +1665,7 @@
       ],
       "property": "share_labour_mayor",
       "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
-      "breaks": [9.5, 27.7, 35.7, 41.7, 47.4, 53, 63.8],
+      "breaks": [9.5, 27.7, 35.7, 41.8, 47.4, 53, 63.8],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1398,7 +1698,7 @@
       ],
       "property": "share_conservative_mayor",
       "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
-      "breaks": [8.2, 20.2, 26.7, 32.6, 39.6, 50.4, 74.3],
+      "breaks": [8.2, 20.2, 26.6, 32.6, 39.6, 50.4, 74.3],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1464,7 +1764,7 @@
       ],
       "property": "share_green_mayor",
       "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
-      "breaks": [2.4, 4.8, 6.1, 7.6, 9.2, 11.5, 22.4],
+      "breaks": [2.4, 4.8, 6.2, 7.6, 9.2, 11.5, 22.4],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1529,7 +1829,7 @@
         "elections-london-2021"
       ],
       "property": "leader_key_assembly",
-      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#666666", "other", "#9b9b9b"],
+      "palette": ["labour", "#E4003B", "conservative", "#0087DC", "liberal_democrat", "#FAA61A", "green", "#6AB023", "reform", "#12B6CF", "independent", "#5A5A5A", "animal_welfare_party", "#8A6F8F", "animal_welfare_party_people_animals_environment", "#8A6F8F", "aspire", "#7B2D8E", "britain_first_british_people_first", "#8A6F8F", "british_democrats", "#8A6F8F", "chislehurst_matters", "#7048A8", "christian_peoples_alliance", "#8A6F8F", "climate_party", "#8A6F8F", "communist_league_election_campaign", "#8A6F8F", "communist_party_of_britain", "#8A6F8F", "count_binface_for_mayor_of_london", "#8A6F8F", "english_constitution_party", "#8A6F8F", "english_constitution_party_bill_of_rights", "#8A6F8F", "freedom_alliance", "#8A6F8F", "heritage_party", "#8A6F8F", "heritage_party_free_speech_and_liberty", "#8A6F8F", "let_london_live", "#8A6F8F", "londependence", "#8A6F8F", "london_real_party", "#8A6F8F", "monster_raving_loony_party", "#8A6F8F", "national_health_action", "#8A6F8F", "national_liberal_party_self_determination_for_all", "#8A6F8F", "official_monster_raving_loony_party", "#8A6F8F", "party_of_women", "#8A6F8F", "rejoin_eu", "#8A6F8F", "renew", "#8A6F8F", "residents_association", "#708238", "resurrection_young_people_in_sha_allah", "#8A6F8F", "shared_ground", "#8A6F8F", "shared_ground_formerly_young_people_s_party", "#8A6F8F", "social_democratic_party", "#E85D9E", "socialist_equality_party", "#8A6F8F", "socialist_party_gb_world_socialist_movement", "#8A6F8F", "taking_the_initiative_party", "#8A6F8F", "the_burning_pink_party", "#8A6F8F", "the_liberal_party", "#8A6F8F", "the_mitre_tw9", "#8A6F8F", "the_reclaim_party", "#8A6F8F", "the_socialist_party_of_great_britain", "#8A6F8F", "the_yoruba_party_in_the_uk", "#8A6F8F", "trade_union_and_socialist_coalition", "#8A6F8F", "trade_union_and_socialist_party", "#8A6F8F", "trade_unionist_and_socialist_coalition", "#8A6F8F", "uk_independence_party", "#8A6F8F", "uk_independence_party_ukip", "#70147A", "ukip", "#8A6F8F", "vote_women_s_equality_party_on_orange", "#8A6F8F", "women_s_equality_party", "#8A6F8F", "workers_party_of_britain", "#8B1E3F", "workers_revolutionary_party", "#8A6F8F"],
       "breaks": [],
       "format": "text",
       "minzoom": 8,
@@ -1558,9 +1858,19 @@
         "party": "leading",
         "results": [
           {
-            "property": "share_labour_assembly",
-            "label": "Labour",
-            "color": "#E4003B"
+            "property": "share_animal_welfare_party_people_animals_environment_assembly",
+            "label": "Animal Welfare Party-People, Animals, Environment",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_christian_peoples_alliance_assembly",
+            "label": "Christian Peoples Alliance",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_communist_party_of_britain_assembly",
+            "label": "Communist Party of Britain",
+            "color": "#8A6F8F"
           },
           {
             "property": "share_conservative_assembly",
@@ -1568,19 +1878,74 @@
             "color": "#0087DC"
           },
           {
-            "property": "share_liberal_democrat_assembly",
-            "label": "Liberal Democrats",
-            "color": "#FAA61A"
-          },
-          {
             "property": "share_green_assembly",
             "label": "Green",
             "color": "#6AB023"
           },
           {
+            "property": "share_heritage_party_free_speech_and_liberty_assembly",
+            "label": "Heritage Party - Free Speech and Liberty",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_labour_assembly",
+            "label": "Labour",
+            "color": "#E4003B"
+          },
+          {
+            "property": "share_let_london_live_assembly",
+            "label": "Let London Live",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_liberal_democrat_assembly",
+            "label": "Liberal Democrats",
+            "color": "#FAA61A"
+          },
+          {
+            "property": "share_londependence_assembly",
+            "label": "Londependence",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_london_real_party_assembly",
+            "label": "London Real Party",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_national_liberal_party_self_determination_for_all_assembly",
+            "label": "National Liberal Party - Self determination for all!",
+            "color": "#8A6F8F"
+          },
+          {
             "property": "share_reform_assembly",
             "label": "Reform UK",
             "color": "#12B6CF"
+          },
+          {
+            "property": "share_rejoin_eu_assembly",
+            "label": "Rejoin EU",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_social_democratic_party_assembly",
+            "label": "Social Democratic Party",
+            "color": "#E85D9E"
+          },
+          {
+            "property": "share_trade_union_and_socialist_coalition_assembly",
+            "label": "Trade Union and Socialist Coalition",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_ukip_assembly",
+            "label": "UKIP",
+            "color": "#8A6F8F"
+          },
+          {
+            "property": "share_vote_women_s_equality_party_on_orange_assembly",
+            "label": "Vote Women's Equality Party on orange",
+            "color": "#8A6F8F"
           }
         ]
       }
@@ -1600,7 +1965,7 @@
       ],
       "property": "lead_percent_assembly",
       "palette": ["#f4eff7", "#ddd0e7", "#bea9d1", "#987fb6", "#70558f", "#4c3569"],
-      "breaks": [0, 7.6, 15.7, 23.6, 30, 36.9, 58.2],
+      "breaks": [0, 7.6, 15.7, 23.7, 30.1, 36.8, 59.5],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1676,7 +2041,7 @@
       ],
       "property": "share_labour_assembly",
       "palette": ["#F7F7F4", "#F3C5CF", "#EF94AA", "#EB6284", "#E7315F", "#E4003B"],
-      "breaks": [7.1, 23.2, 31.8, 41.4, 48.2, 53.7, 70.9],
+      "breaks": [7.1, 23.2, 32, 41.5, 48.2, 53.8, 70.9],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1709,7 +2074,7 @@
       ],
       "property": "share_conservative_assembly",
       "palette": ["#F7F7F4", "#C5E0EF", "#94CAEA", "#62B3E5", "#319DE0", "#0087DC"],
-      "breaks": [6.3, 14.8, 21.2, 27.5, 34.4, 45.8, 68.1],
+      "breaks": [6.3, 14.7, 21.1, 27.4, 34.4, 45.8, 68.1],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1775,7 +2140,7 @@
       ],
       "property": "share_green_assembly",
       "palette": ["#F7F7F4", "#DAE8CA", "#BEDAA0", "#A2CC76", "#86BE4C", "#6AB023"],
-      "breaks": [3, 6.6, 9.4, 11.6, 14.3, 17.1, 30.2],
+      "breaks": [3, 6.7, 9.5, 11.6, 14.3, 17.1, 30.2],
       "format": "percent",
       "minzoom": 8,
       "maxzoom": 16,
@@ -1830,10 +2195,10 @@
       "id": "domestic-property-age",
       "group": "buildings",
       "kind": "fill",
-      "label": "Domestic property construction age",
-      "shortLabel": "Construction age",
-      "description": "Domestic properties only. Construction age may be modelled where no direct source record is available.",
-      "methodology": "OS OpenMap Local building outlines matched spatially to LBSM2 domestic-property locations, coloured by the modal construction-age band of domestic property records in each matched outline. The tooltip reports the direct/modelled status and property count.",
+      "label": "Domestic property construction year",
+      "shortLabel": "Construction year",
+      "description": "Domestic properties only; year is the modal LBSM2 construction band for each matched building.",
+      "methodology": "OS OpenMap Local building outlines matched spatially to LBSM2 domestic-property locations, coloured by the modal construction-year band of domestic property records in each matched outline. OS OpenMap Local does not include construction year, and LBSM2 supplies this attribute only for domestic stock. The tooltip reports the direct/modelled status and property count.",
       "unit": "age band",
       "referenceDate": "LBSM2 snapshot October 2024; OS OpenMap Local August 2026",
       "geography": "generalised building outline",
@@ -1850,7 +2215,7 @@
       "tooltip": [
         {
           "property": "construction_age_band",
-          "label": "Construction age band",
+          "label": "Construction year band",
           "format": "text"
         },
         {
@@ -1878,7 +2243,7 @@
       "label": "Underground lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -1917,7 +2282,7 @@
       "label": "Underground stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -1926,7 +2291,7 @@
       "palette": "#1f5f8b",
       "breaks": [],
       "format": "text",
-      "minzoom": 8,
+      "minzoom": 7,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#1f5f8b",
@@ -1955,7 +2320,7 @@
       "label": "DLR lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -1994,7 +2359,7 @@
       "label": "DLR stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2003,7 +2368,7 @@
       "palette": "#00A4A7",
       "breaks": [],
       "format": "text",
-      "minzoom": 8,
+      "minzoom": 7,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#00A4A7",
@@ -2032,7 +2397,7 @@
       "label": "Trams lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -2071,7 +2436,7 @@
       "label": "Trams stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2080,7 +2445,7 @@
       "palette": "#84B817",
       "breaks": [],
       "format": "text",
-      "minzoom": 8,
+      "minzoom": 7,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#84B817",
@@ -2109,7 +2474,7 @@
       "label": "Overground lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -2148,7 +2513,7 @@
       "label": "Overground stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2157,7 +2522,7 @@
       "palette": "#EE7C0E",
       "breaks": [],
       "format": "text",
-      "minzoom": 8,
+      "minzoom": 7,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#EE7C0E",
@@ -2186,7 +2551,7 @@
       "label": "Elizabeth line lines",
       "description": "Actual OpenStreetMap route-relation geometry with dated TfL service identity and stops.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "OSM route relation / TfL service",
       "sourceIds": [
         "transport"
@@ -2225,7 +2590,7 @@
       "label": "Elizabeth line stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -2234,7 +2599,7 @@
       "palette": "#6950A1",
       "breaks": [],
       "format": "text",
-      "minzoom": 8,
+      "minzoom": 7,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#6950A1",
@@ -2263,7 +2628,7 @@
       "label": "Buses lines",
       "description": "Dated static TfL route geometry; no live runtime dependency.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL network geometry",
       "sourceIds": [
         "transport"
@@ -5588,7 +5953,7 @@
       "label": "Buses stops",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -8912,7 +9277,7 @@
       "label": "Santander Cycle docks",
       "description": "Dated static TfL stop/dock snapshot; availability is not shown.",
       "unit": "",
-      "referenceDate": "2026-09-04",
+      "referenceDate": "2026-09-05",
       "geography": "TfL stop or dock location",
       "sourceIds": [
         "transport"
@@ -8921,7 +9286,7 @@
       "palette": "#E31B6D",
       "breaks": [],
       "format": "text",
-      "minzoom": 8,
+      "minzoom": 7,
       "maxzoom": 18,
       "opacity": 0.98,
       "lineColor": "#E31B6D",
@@ -8950,78 +9315,85 @@
       "organisation": "Office for National Statistics",
       "url": "https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates/mid2022revisednov2025tomid2024/sapelsoasyoa20222024.xlsx",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "Census 2021 TS004, TS066 and TS067",
       "organisation": "Office for National Statistics via Nomis",
       "url": "https://www.nomisweb.co.uk/census/2021/bulk",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "Small area model-based income estimates, FYE 2023",
       "organisation": "Office for National Statistics",
       "url": "https://www.ons.gov.uk/file?uri=/employmentandlabourmarket/peopleinwork/earningsandworkinghours/datasets/smallareaincomeestimatesformiddlelayersuperoutputareasenglandandwales/financialyearending2023/datasetfinal.xlsx",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "English Indices of Deprivation 2025",
       "organisation": "Ministry of Housing, Communities and Local Government",
       "url": "https://assets.publishing.service.gov.uk/media/691ded56d140bbbaa59a2a7d/File_7_IoD2025_All_Ranks_Scores_Deciles_Population_Denominators.csv",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "General election results 2024",
       "organisation": "UK Parliament",
       "url": "https://electionresults.parliament.uk/general-elections/6/countries/2/candidacies.csv",
       "licence": "Open Parliament Licence",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "Borough Council Election Results 2022",
       "organisation": "Greater London Authority",
       "url": "https://data.london.gov.uk/download/e16o8/26588a60-df3c-47cd-84e6-bd94f7a7d0c4/London%202022%20Wards.xlsx",
       "licence": "Open Government Licence v2.0",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "Mayor and London Assembly election results 2021",
       "organisation": "London Elects",
       "url": "https://www.londonelects.org.uk/files/2021%20London%20Elects%20-%20Ward%20Level%20Data%20Release.xlsx",
       "licence": "Open Government Licence",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "London Building Stock Model 2",
       "organisation": "Greater London Authority",
       "url": "https://data.london.gov.uk/dataset/london-building-stock-model-2-lbsm-2-2k55d",
       "licence": "Open Government Licence",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "OS OpenMap Local",
       "organisation": "Ordnance Survey",
       "url": "https://www.ordnancesurvey.co.uk/products/os-open-map-local",
       "licence": "Open Government Licence v3.0",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
+    },
+    {
+      "title": "OS Open Names",
+      "organisation": "Ordnance Survey",
+      "url": "https://www.ordnancesurvey.co.uk/products/os-open-names",
+      "licence": "Open Government Licence v3.0",
+      "retrieved": "2026-09-05"
     },
     {
       "title": "TfL Open Data",
       "organisation": "Transport for London",
       "url": "https://tfl.gov.uk/info-for/open-data-users/our-open-data",
       "licence": "TfL open-data terms",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     },
     {
       "title": "OpenStreetMap rail route relations",
       "organisation": "OpenStreetMap contributors",
       "url": "https://www.openstreetmap.org/copyright",
       "licence": "Open Data Commons Open Database License",
-      "retrieved": "2026-09-04"
+      "retrieved": "2026-09-05"
     }
   ],
-  "notes": ["LSOA21 is the standard small-area geography for population, foreign-born, education and work.", "Resident dots are a dasymetric model: one dot represents 25 residents allocated to a building outline using domestic-property counts, not an exact person or household location. One unmatched LSOA uses its polygon as a documented fallback.", "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.", "Foreign citizenship and foreign-born change are deliberately excluded.", "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.", "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.", "City of London wards are No data in the 2022 borough-election layers because the City holds separate Common Council elections outside the GLA borough-results workbook.", "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."]
+  "notes": ["LSOA21 is the standard small-area geography for population, foreign-born, education and work.", "Resident dots are a dasymetric model: one dot represents 25 residents allocated to a building outline using domestic-property counts, not an exact person or household location. One unmatched LSOA uses its polygon as a documented fallback.", "Census 2021 labour-market measures should be read in the context of the coronavirus pandemic and furlough guidance.", "Income estimates use MSOA21; selecting an LSOA does not make an MSOA estimate LSOA-specific.", "Election lead percentage is lead votes divided by valid votes, not the winning party's total share.", "City of London wards are No data in the 2022 borough-election layers because the City holds separate Common Council elections outside the GLA borough-results workbook.", "Missing, suppressed and uncovered observations remain No data and are never replaced with zero."]
 }

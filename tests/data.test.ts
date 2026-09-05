@@ -27,7 +27,7 @@ describe("London atlas generated data", () => {
   it("shows every rail and Santander stop layer from the same zoom", () => {
     const stops = manifest.layers.filter(layer => layer.kind === "transport-stop" && layer.control?.transportMode !== "bus");
     expect(stops.length).toBeGreaterThan(0);
-    expect(stops.every(layer => layer.minzoom === 8)).toBe(true);
+    expect(stops.every(layer => layer.minzoom === 7)).toBe(true);
   });
   it("publishes 4,994 mixed-geography LSOA reports", () => {
     expect(Object.keys(reports.sections)).toHaveLength(4994);
@@ -38,6 +38,21 @@ describe("London atlas generated data", () => {
     expect(report.metrics.income_bhc_gbp?.geography).toBe("MSOA21");
     expect(reports.distributions.population_density_km2?.observationCount).toBe(4994);
     expect(report.elections.general.areaName).toBeTruthy();
+    expect(report.elections.general.shareLabels.independent).toBe("Independent");
+  });
+  it("keeps candidates and smaller parties visible in election comparisons", () => {
+    const islington = Object.values(reports.sections).find(report => report.elections.general.areaName === "Islington North");
+    expect(islington).toBeTruthy();
+    expect(islington?.elections.general.leader).toBe("Independent");
+    expect(islington?.elections.general.shares.independent).toBeCloseTo(49.21846, 4);
+    expect(islington?.elections.general.shares.labour).toBeCloseTo(34.43048, 4);
+    expect(Object.values(reports.sections).some(report => report.elections.local.leader === "Aspire" && (report.elections.local.shares.aspire ?? 0) > 0)).toBe(true);
+  });
+  it("publishes the official road-search index and fixed population-change buckets", () => {
+    const addresses = read<{ records: Array<[string, string, string, number, number]> }>("public/data/addresses.json");
+    expect(addresses.records.length).toBeGreaterThan(50_000);
+    expect(addresses.records.some(record => record[1] === "Yalding Road")).toBe(true);
+    expect(manifest.layers.find(layer => layer.id === "population-change-5y")?.breaks.slice(1, -1)).toEqual([-8, -4, -1.5, 1.5, 4, 8]);
   });
   it("keeps the verified Brent 019D Census denominator transparent", () => {
     const brent = reports.sections.E01000633!;
