@@ -22,6 +22,14 @@ export function shouldQueryAreaHitLayer(
   return activeGroup !== "transport" && dataLayerVisible && isAreaSelectionLayer(layer);
 }
 
+export function shouldDeferAreaSelection(
+  areaHitEligible: boolean,
+  canonicalAreaId: unknown,
+  areaSourceLoaded: boolean,
+): boolean {
+  return areaHitEligible && canonicalAreaId === undefined && !areaSourceLoaded;
+}
+
 export function resolveMapClickTarget<T>(
   layer: Pick<LayerDefinition, "group">,
   canonicalAreaId: unknown,

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { isAreaSelectionLayer, resolveMapClickTarget, shouldQueryAreaHitLayer } from "../src/map-selection";
+import {
+  isAreaSelectionLayer,
+  resolveMapClickTarget,
+  shouldDeferAreaSelection,
+  shouldQueryAreaHitLayer,
+} from "../src/map-selection";
 import type { LayerGroup } from "../src/types";
 
 describe("map selection priority", () => {
@@ -16,6 +21,13 @@ describe("map selection priority", () => {
       kind: "area",
       areaId: "E01000918",
     });
+  });
+
+  it("defers a cold-load tap until the area source is ready", () => {
+    expect(shouldDeferAreaSelection(true, undefined, false)).toBe(true);
+    expect(shouldDeferAreaSelection(true, undefined, true)).toBe(false);
+    expect(shouldDeferAreaSelection(true, "E01000918", false)).toBe(false);
+    expect(shouldDeferAreaSelection(false, undefined, false)).toBe(false);
   });
 
   it("keeps building and transport features independent of the area hit layer", () => {

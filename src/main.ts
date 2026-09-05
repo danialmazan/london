@@ -10,7 +10,12 @@ import { LONDON_CAMERA, parseHash, serializeState } from "./state";
 import { renderLondonElectionCard, renderSectionReport, renderThemeSectionCard } from "./report";
 import { bindDistributionCharts } from "./report-interaction";
 import { renderFeatureActions } from "./feature-actions";
-import { isAreaSelectionLayer, resolveMapClickTarget, shouldQueryAreaHitLayer } from "./map-selection";
+import {
+  isAreaSelectionLayer,
+  resolveMapClickTarget,
+  shouldDeferAreaSelection,
+  shouldQueryAreaHitLayer,
+} from "./map-selection";
 import { shareOrCopy } from "./share";
 import type {
   AddressIndex,
@@ -78,6 +83,7 @@ let searchMarker: maplibregl.Marker | undefined;
 let activeMapLayerIds: string[] = [];
 let hashTimer: number | undefined;
 let toastTimer: number | undefined;
+let pendingAreaSelection = 0;
 let currentFeatureTitle = "";
 let reportChartCleanup: (() => void) | undefined;
 let titleBeforePrint: string | undefined;
@@ -1141,13 +1147,30 @@ function bindSectionCardActions(): void {
 }
 
 function handleMapClick(event: MapMouseEvent): void {
+  const requestId = ++pendingAreaSelection;
   const selectedLayer = getSelectedLayer();
   const features = map
     .queryRenderedFeatures(event.point)
     .filter((feature) => activeMapLayerIds.includes(feature.layer.id));
   const selectedLayerPrefix = `atlas-${selectedLayer.id}-`;
   const feature = features.find((candidate) => candidate.layer.id.startsWith(selectedLayerPrefix)) ?? features[0];
-  const target = resolveMapClickTarget(selectedLayer, queryCanonicalAreaId(event), feature);
+  const areaHitEligible = shouldQueryAreaHitLayer(
+    atlasState.group,
+    selectedLayer,
+    atlasState.dataLayerVisible,
+  );
+  const canonicalAreaId = queryCanonicalAreaIdAtPoint(event.point);
+  if (
+    shouldDeferAreaSelection(
+      areaHitEligible,
+      canonicalAreaId,
+      Boolean(map.getSource("lsoa21")) && map.isSourceLoaded("lsoa21"),
+    )
+  ) {
+    queueAreaSelection(event.lngLat.lng, event.lngLat.lat, requestId);
+    return;
+  }
+  const target = resolveMapClickTarget(selectedLayer, canonicalAreaId, feature);
 
   if (target.kind === "area") {
     selectCanonicalSection(target.areaId);
@@ -1172,12 +1195,21 @@ function selectCanonicalSection(sectionId: string): void {
   void renderSelectedSection(sectionId);
 }
 
-function queryCanonicalAreaId(event: MapMouseEvent): unknown {
+function queryCanonicalAreaIdAtPoint(point: MapMouseEvent["point"]): unknown {
   if (
     !shouldQueryAreaHitLayer(atlasState.group, getSelectedLayer(), atlasState.dataLayerVisible) ||
     !map.getLayer(SECTION_HIT_LAYER)
   ) return undefined;
-  return map.queryRenderedFeatures(event.point, { layers: [SECTION_HIT_LAYER] })[0]?.properties?.section_id;
+  return map.queryRenderedFeatures(point, { layers: [SECTION_HIT_LAYER] })[0]?.properties?.section_id;
+}
+
+function queueAreaSelection(lng: number, lat: number, requestId: number): void {
+  showToast("Loading area boundaries…");
+  map.once("idle", () => {
+    if (requestId !== pendingAreaSelection) return;
+    const areaId = queryCanonicalAreaIdAtPoint(map.project([lng, lat]));
+    if (typeof areaId === "string" && /^E010\d{5}$/.test(areaId)) selectCanonicalSection(areaId);
+  });
 }
 
 function handleMapHover(event: MapMouseEvent): void {
@@ -1186,7 +1218,7 @@ function handleMapHover(event: MapMouseEvent): void {
   const features = map
     .queryRenderedFeatures(event.point)
     .filter((feature) => activeMapLayerIds.includes(feature.layer.id));
-  const target = resolveMapClickTarget(selectedLayer, queryCanonicalAreaId(event), features[0]);
+  const target = resolveMapClickTarget(selectedLayer, queryCanonicalAreaIdAtPoint(event.point), features[0]);
   map.getCanvas().style.cursor = target.kind === "empty" ? "" : "pointer";
 }
 
