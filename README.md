@@ -28,3 +28,7 @@ The production base path is `/london/`. Generated public assets live in `public/
 Missing, suppressed and uncovered observations remain `No data`. Election lead is leader votes minus runner-up votes; lead percentage divides that margin by valid votes.
 
 The 2022 borough-election source excludes the City of London's separate Common Council elections, so the City's wards remain explicitly `No data`. Party-specific maps use the parties' recognised primary colours.
+
+## Browser analytics opt-out
+
+The HTML entry loads Cloudflare Web Analytics only when `localStorage.getItem("exclude_cf_analytics") !== "1"`. To exclude this browser profile, run `localStorage.setItem("exclude_cf_analytics", "1"); location.reload();` in the site console. To restore tracking, run `localStorage.removeItem("exclude_cf_analytics"); location.reload();`. The preference persists for the exact origin and is shared by all project paths under `https://danielalmazan.com`. Other browsers and profiles retain normal tracking. Reload existing tabs after changing it. No visible settings or other analytics integrations are changed.
